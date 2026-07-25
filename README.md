@@ -175,5 +175,17 @@ To fully utilize context-aware features, ensure the following permissions are co
 ---
 
 ## 📱 Application Demo
-<video src="assets/demo/todo_app.mp4" autoplay loop muted playsinline width="100%"></video>
 
+<p align="center">
+  <img src="assets/demo/todo_1.jpeg" width="30%" alt="Demo 1" />
+  <img src="assets/demo/todo_2.jpeg" width="30%" alt="Demo 2" />
+  <img src="assets/demo/todo_3.jpeg" width="30%" alt="Demo 3" />
+</p>
+<p align="center">
+  <img src="assets/demo/todo_4.jpeg" width="30%" alt="Demo 4" />
+  <img src="assets/demo/todo_5.jpeg" width="30%" alt="Demo 5" />
+  <img src="assets/demo/todo_6.jpeg" width="30%" alt="Demo 6" />
+</p>
+<p align="center">
+  <img src="assets/demo/todo_7.jpeg" width="30%" alt="Demo 7" />
+</p>
