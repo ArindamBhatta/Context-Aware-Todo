@@ -10,7 +10,6 @@ import 'package:todo/features/home/presentation/page/home_navigation_page.dart';
 import 'package:todo/features/onboarding/presentation/page/onboarding_screen.dart';
 import 'package:todo/features/splash/logic/splash_manager.dart';
 import 'package:todo/features/splash/page/splash_screen.dart';
-import 'package:todo/features/vault/presentation/pages/vault_screen.dart';
 
 abstract final class AppRoutes {
   static const splash = '/';
@@ -19,7 +18,6 @@ abstract final class AppRoutes {
   static const home = '/home';
   static const addTodo = '/add-todo';
   static const profile = '/profile';
-  static const vault = '/vault';
 }
 
 GoRouter createAppRouter({required SplashManager splashManager}) {
@@ -51,10 +49,6 @@ GoRouter createAppRouter({required SplashManager splashManager}) {
       GoRoute(
         path: AppRoutes.profile,
         builder: (context, state) => const ProfilePage(),
-      ),
-      GoRoute(
-        path: AppRoutes.vault,
-        builder: (context, state) => const VaultScreen(),
       ),
     ],
 

@@ -342,9 +342,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   onPressed: () {
                                     context.push('/profile');
                                   },
-                                  onLongPress: () {
-                                    context.push('/vault');
-                                  },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,
                                     foregroundColor: const Color(0xFF5E42EB),
