@@ -1,15 +1,30 @@
 # 📍 Context-Aware To-Do App with Geofencing
 
 [![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)](https://flutter.dev/)
-[![Dart](https://img.shields.io/badge/Dart-%230175C2.svg?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev/)
 [![SQLite](https://img.shields.io/badge/SQLite-%2307405E.svg?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
 [![Firebase](https://img.shields.io/badge/Firebase-%23039BE5.svg?style=for-the-badge&logo=Firebase&logoColor=white)](https://firebase.google.com/)
-[![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://developer.android.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+
+
 
 > An **intelligent, location-aware, and context-driven personal productivity engine** built with Flutter. Designed to surpass traditional static to-do lists by surfacing the right tasks at the right time and location.
 
 ---
+
+## 📱 Application Demo
+
+<p align="center">
+  <img src="assets/demo/todo_1.jpeg" width="30%" alt="Demo 1" />
+  <img src="assets/demo/todo_2.jpeg" width="30%" alt="Demo 2" />
+  <img src="assets/demo/todo_3.jpeg" width="30%" alt="Demo 3" />
+</p>
+<p align="center">
+  <img src="assets/demo/todo_4.jpeg" width="30%" alt="Demo 4" />
+  <img src="assets/demo/todo_5.jpeg" width="30%" alt="Demo 5" />
+  <img src="assets/demo/todo_6.jpeg" width="30%" alt="Demo 6" />
+</p>
+<p align="center">
+  <img src="assets/demo/todo_7.jpeg" width="30%" alt="Demo 7" />
+</p>
 
 ## 💡 Core Philosophy
 
@@ -53,35 +68,6 @@ By integrating **location geofencing**, **biometric security**, **focus timers**
 
 ---
 
-## 🏗️ Architecture & Folder Structure
-
-This application adheres to **Clean Architecture** principles and the **BLoC / Cubit** pattern for robust state separation:
-
-```
-lib/
-├── core/
-│   ├── cubit/            # Global connectivity & theme blocs
-│   ├── router/           # GoRouter route definitions & auth guards
-│   ├── services/         # Notification & network monitoring services
-│   ├── theme/            # Material design light & dark themes
-│   └── widgets/          # Shared custom UI widgets & buttons
-├── data/
-│   ├── todo_database.dart # SQLite database initialization & migrations
-│   └── todo_repository.dart# Relational data access layer
-├── features/
-│   ├── add_todo/         # Task creation forms (Quick vs Project tabs)
-│   ├── auth/             # Biometric authentication & login flow
-│   ├── home/             # Main dashboard, task lists & Cubit logic
-│   ├── onboarding/       # Interactive intro screens
-│   ├── pomodoro/         # Focus timer UI & PomodoroCubit
-│   ├── profile/          # User settings, preferences & theme toggle
-│   ├── splash/           # Initial app launch & router redirect manager
-│   └── tasks/            # Detailed task views & status modifiers
-└── main.dart             # App entry point & dependency tree setup
-```
-
----
-
 ## 🛠️ Technology Stack
 
 | Domain | Technology / Library | Purpose |
@@ -92,7 +78,7 @@ lib/
 | **Secure Storage** | `flutter_secure_storage` | Encrypted key-value store for secrets |
 | **Biometrics** | `local_auth` | Fingerprint & Face ID authentication |
 | **Routing** | `go_router` | Declarative routing & navigation guards |
-| **Notifications** | `flutter_local_notifications`, `awesome_notifications` | Scheduled local & background notifications |
+| **Notifications** | `flutter_local_notifications` | Scheduled local & background notifications |
 | **Background Tasks**| `workmanager` | Periodic background execution on Android |
 | **Network Monitor** | `connectivity_plus` | Real-time network connectivity listening |
 | **Cloud Service** | `firebase_core`, `firebase_auth` | Authentication & backend services |
@@ -125,6 +111,7 @@ CREATE TABLE tasks (
 
 * [Flutter SDK](https://docs.flutter.dev/get-started/install) (v3.27+ recommended)
 * Android Studio / VS Code with Flutter extension
+
 * Android Device or Emulator (API Level 24+ recommended for Geofencing & Biometrics)
 
 ### Installation
@@ -155,37 +142,11 @@ CREATE TABLE tasks (
 To fully utilize context-aware features, ensure the following permissions are configured:
 
 * **Location (`ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION`)**: Required for geofenced task triggers.
+
 * **Notifications (`POST_NOTIFICATIONS`)**: Required on Android 13+ (API 33+) for Pomodoro and deadline alerts.
+
 * **Biometrics (`USE_BIOMETRIC`, `USE_FINGERPRINT`)**: Required to unlock the Encrypted Vault.
 
 ---
 
-## 📌 Feature Roadmap
 
-- [x] SQLite offline storage & repository layer
-- [x] Biometric security & encrypted vault
-- [x] Dual task creation (Quick Work vs Project Work)
-- [x] Pomodoro focus timer with local background notifications
-- [x] Network status detection with custom snackbars
-- [ ] Automated geofence entry/exit boundary triggers
-- [ ] Weather-driven contextual task notifications (e.g., Rain alerts for indoor tasks)
-- [ ] Priority scoring engine (`priorityScore = urgency + contextMatch + manualWeight`)
-- [ ] Cloud sync & multi-device backup
-
----
-
-## 📱 Application Demo
-
-<p align="center">
-  <img src="assets/demo/todo_1.jpeg" width="30%" alt="Demo 1" />
-  <img src="assets/demo/todo_2.jpeg" width="30%" alt="Demo 2" />
-  <img src="assets/demo/todo_3.jpeg" width="30%" alt="Demo 3" />
-</p>
-<p align="center">
-  <img src="assets/demo/todo_4.jpeg" width="30%" alt="Demo 4" />
-  <img src="assets/demo/todo_5.jpeg" width="30%" alt="Demo 5" />
-  <img src="assets/demo/todo_6.jpeg" width="30%" alt="Demo 6" />
-</p>
-<p align="center">
-  <img src="assets/demo/todo_7.jpeg" width="30%" alt="Demo 7" />
-</p>
