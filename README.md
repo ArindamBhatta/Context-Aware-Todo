@@ -30,7 +30,7 @@
 
 Traditional task managers overload users with static lists of unorganized to-dos regardless of time, place, or mental state. This project operates on a dynamic context equation:
 
-$$\text{Actionable Task} = \text{Current Location (Geofencing)} + \text{Time \& Urgency} + \text{User Focus State}$$
+$$\text{Actionable Task} = \text{Current Location (Geofencing)} + \text{Time and Urgency} + \text{User Focus State}$$
 
 By integrating **location geofencing**, **biometric security**, **focus timers**, and **offline-first persistence**, the app adapts to your day rather than requiring you to adapt to it.
 
