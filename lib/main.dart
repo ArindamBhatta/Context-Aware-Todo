@@ -5,7 +5,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo/core/router/app_router.dart';
-import 'package:todo/core/cubit/connectivity_manager.dart';
 import 'package:todo/core/cubit/theme_bloc.dart';
 import 'package:todo/data/todo_repository.dart';
 import 'package:todo/features/auth/data/datasources/auth_local_datasource.dart';
@@ -19,9 +18,6 @@ import 'package:todo/features/pomodoro/logic/pomodoro_cubit.dart';
 import 'package:todo/features/splash/logic/splash_manager.dart';
 
 import 'package:todo/core/services/notification_service.dart';
-
-final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey =
-    GlobalKey<ScaffoldMessengerState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,7 +42,6 @@ class _TodoAppState extends State<TodoApp> {
   late final AuthManager _authManager;
   late final OnboardingManager _onboardingManager;
   late final TodoCubit _taskManager;
-  late final ConnectivityManager _connectivityManager;
   late final GoRouter _router;
 
   @override
@@ -54,13 +49,11 @@ class _TodoAppState extends State<TodoApp> {
     super.initState();
     _authRepository = AuthRepository(AuthLocalDataSource());
     _onboardingRepository = OnboardingRepository(OnboardingLocalDataSource());
-
     _themeBloc = ThemeBloc(initialThemeMode: ThemeMode.light);
     _authManager = AuthManager(_authRepository);
     _onboardingManager = OnboardingManager(_onboardingRepository);
     _splashManager = SplashManager(onboardingRepository: _onboardingRepository);
     _taskManager = TodoCubit(TodoRepository());
-    _connectivityManager = ConnectivityManager()..startMonitoring();
     _router = createAppRouter(splashManager: _splashManager);
 
     unawaited(_authManager.syncAuthState());
@@ -69,7 +62,6 @@ class _TodoAppState extends State<TodoApp> {
 
   @override
   void dispose() {
-    _connectivityManager.close();
     _taskManager.close();
     _onboardingManager.close();
     _authManager.close();
@@ -88,43 +80,17 @@ class _TodoAppState extends State<TodoApp> {
         BlocProvider<AuthManager>.value(value: _authManager),
         BlocProvider<OnboardingManager>.value(value: _onboardingManager),
         BlocProvider<TodoCubit>.value(value: _taskManager),
-        BlocProvider<ConnectivityManager>.value(value: _connectivityManager),
         BlocProvider<PomodoroCubit>(create: (context) => PomodoroCubit()),
       ],
-      child: BlocListener<ConnectivityManager, ConnectivityStatus>(
-        listenWhen: (previous, current) => previous != current,
-        listener: (context, status) {
-          if (status == ConnectivityStatus.unknown) {
-            return;
-          }
-
-          final ScaffoldMessengerState? messenger =
-              rootScaffoldMessengerKey.currentState;
-
-          messenger
-            ?..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Text(
-                  status == ConnectivityStatus.offline
-                      ? 'No internet connection.'
-                      : 'Internet connection restored.',
-                ),
-                duration: const Duration(seconds: 2),
-              ),
-            );
+      child: BlocBuilder<ThemeBloc, ThemeState>(
+        builder: (context, themeState) {
+          return MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            title: 'Todo App',
+            theme: themeState.themeData,
+            routerConfig: _router,
+          );
         },
-        child: BlocBuilder<ThemeBloc, ThemeState>(
-          builder: (context, themeState) {
-            return MaterialApp.router(
-              debugShowCheckedModeBanner: false,
-              title: 'Todo App',
-              theme: themeState.themeData,
-              routerConfig: _router,
-              scaffoldMessengerKey: rootScaffoldMessengerKey,
-            );
-          },
-        ),
       ),
     );
   }
