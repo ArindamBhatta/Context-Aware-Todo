@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class OnboardingLocalDataSource {
+class OnBoardingLocalDataSource {
   static const String _onboardingCompletedKey = 'onboarding_completed';
 
   //Check if onboarding is completed

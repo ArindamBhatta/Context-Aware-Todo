@@ -1,13 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo/features/onboarding/data/repositories/onboarding_repository.dart';
+import 'package:todo/features/onboarding/data/repositories/on_boarding_repository.dart';
 
 part 'splash_state.dart';
 
-class SplashManager extends Cubit<SplashState> {
-  final OnboardingRepository _onboardingRepository;
+class SplashCubit extends Cubit<SplashState> {
+  final OnBoardingRepository _onBoardingRepository;
 
-  SplashManager({required OnboardingRepository onboardingRepository})
-    : _onboardingRepository = onboardingRepository,
+  SplashCubit({required OnBoardingRepository onBoardingRepository})
+    : _onBoardingRepository = onBoardingRepository,
       super(SplashLoading());
 
   Future<void> initialize() async {
@@ -23,7 +23,7 @@ class SplashManager extends Cubit<SplashState> {
   }) async {
     // Keep splash visible for at least 2.5 seconds
     final List<Future<dynamic>> tasks = <Future<dynamic>>[
-      _onboardingRepository.isOnboardingCompleted(),
+      _onBoardingRepository.isOnboardingCompleted(),
     ];
 
     if (includeSplashDelay) {
@@ -32,10 +32,10 @@ class SplashManager extends Cubit<SplashState> {
 
     final List<dynamic> results = await Future.wait<dynamic>(tasks);
 
-    final int onboardingIndex = includeSplashDelay ? 1 : 0;
-    final bool onboardingCompleted = results[onboardingIndex] as bool;
+    final int onBoardingIndex = includeSplashDelay ? 1 : 0;
+    final bool onBoardingCompleted = results[onBoardingIndex] as bool;
 
-    if (!onboardingCompleted) {
+    if (!onBoardingCompleted) {
       emit(SplashNavigateToOnboarding());
     } else {
       emit(SplashNavigateToLogin());

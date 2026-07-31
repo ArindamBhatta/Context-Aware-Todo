@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/repositories/onboarding_repository.dart';
+import 'package:todo/features/onboarding/data/repositories/on_boarding_repository.dart';
 
-class OnboardingManager extends Cubit<bool> {
-  final OnboardingRepository _repository;
+class OnBoardingCubit extends Cubit<bool> {
+  final OnBoardingRepository _repository;
 
-  OnboardingManager(this._repository) : super(false);
+  OnBoardingCubit(this._repository) : super(false);
 
   Future<void> syncOnboardingState() async {
     final bool isCompleted = await _repository.isOnboardingCompleted();

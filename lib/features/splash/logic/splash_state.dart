@@ -1,4 +1,4 @@
-part of 'splash_manager.dart';
+part of 'splash_cubit.dart';
 
 sealed class SplashState {}
 

@@ -3,10 +3,10 @@ import '../../data/models/auth_user.dart';
 import '../../data/repositories/auth_repository.dart';
 import 'auth_state.dart';
 
-class AuthManager extends Cubit<AuthState> {
+class AuthCubit extends Cubit<AuthState> {
   final AuthRepository _repository;
 
-  AuthManager(this._repository) : super(const AuthUnauthenticated());
+  AuthCubit(this._repository) : super(const AuthUnauthenticated());
 
   Future<void> syncAuthState() async {
     final AuthUser? user = _repository.getCurrentUser();

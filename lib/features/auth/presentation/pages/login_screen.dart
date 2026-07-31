@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo/core/router/app_router.dart';
-import 'package:todo/features/auth/presentation/logic/auth_manager.dart';
+import 'package:todo/features/auth/presentation/logic/auth_cubit.dart';
 import 'package:todo/features/auth/presentation/logic/biometric_auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -26,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _prepareScreen() async {
-    final AuthManager authManager = context.read<AuthManager>();
+    final AuthCubit authManager = context.read<AuthCubit>();
 
     final results = await Future.wait<dynamic>([
       authManager.isLoggedIn(),
@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      final AuthManager authManager = context.read<AuthManager>();
+      final AuthCubit authManager = context.read<AuthCubit>();
       final bool success = await authManager.signInWithGoogle();
 
       if (!success) {
@@ -145,7 +145,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(28),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF5E42EB).withValues(alpha: 0.35),
+                          color: const Color(
+                            0xFF5E42EB,
+                          ).withValues(alpha: 0.35),
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),
@@ -192,42 +194,46 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: OutlinedButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: const Color(0xFF0F172A),
-                        side: const BorderSide(color: Color(0xFFE2E8F0), width: 1.5),
+                        side: const BorderSide(
+                          color: Color(0xFFE2E8F0),
+                          width: 1.5,
+                        ),
                         elevation: 2,
                         shadowColor: Colors.black.withValues(alpha: 0.04),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
-                      child: _isLoading
-                          ? const SizedBox(
-                              width: 22,
-                              height: 22,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.5,
-                                color: Color(0xFF5E42EB),
-                              ),
-                            )
-                          : const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                FaIcon(
-                                  FontAwesomeIcons.google,
-                                  size: 20,
-                                  color: Color(0xFF4285F4),
+                      child:
+                          _isLoading
+                              ? const SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.5,
+                                  color: Color(0xFF5E42EB),
                                 ),
-                                SizedBox(width: 14),
-                                Text(
-                                  'Continue with Google',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Color(0xFF0F172A),
-                                    letterSpacing: -0.2,
+                              )
+                              : const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  FaIcon(
+                                    FontAwesomeIcons.google,
+                                    size: 20,
+                                    color: Color(0xFF4285F4),
                                   ),
-                                ),
-                              ],
-                            ),
+                                  SizedBox(width: 14),
+                                  Text(
+                                    'Continue with Google',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFF0F172A),
+                                      letterSpacing: -0.2,
+                                    ),
+                                  ),
+                                ],
+                              ),
                     ),
                   ),
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo/features/add_todo/data/todo.dart';
-import 'package:todo/features/auth/presentation/logic/auth_manager.dart';
+import 'package:todo/features/auth/presentation/logic/auth_cubit.dart';
 import 'package:todo/features/auth/presentation/logic/auth_state.dart';
 import 'package:todo/features/home/presentation/logic/todo_cubit.dart';
 import 'package:todo/features/home/presentation/page/details_page.dart';
@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildProfileHeader() {
-    return BlocBuilder<AuthManager, AuthState>(
+    return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, authState) {
         final String displayName =
             authState is AuthAuthenticated

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/features/splash/page/corner_ring.dart';
 
-import '../logic/splash_manager.dart';
+import '../logic/splash_cubit.dart';
 import 'floating_widget.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<SplashManager>().initialize();
+    context.read<SplashCubit>().initialize();
   }
 
   @override

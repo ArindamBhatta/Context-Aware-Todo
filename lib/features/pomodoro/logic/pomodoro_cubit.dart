@@ -10,7 +10,7 @@ extension PomodoroModeX on PomodoroMode {
       case PomodoroMode.focus:
         return 25;
       case PomodoroMode.shortBreak:
-        return 1;
+        return 5;
       case PomodoroMode.longBreak:
         return 15;
     }
@@ -150,9 +150,10 @@ class PomodoroCubit extends Cubit<PomodoroState> {
           title: state.mode.completionNotificationTitle,
           body: state.mode.completionNotificationBody,
         );
-        final newCompleted = state.mode == PomodoroMode.focus
-            ? state.completedSessions + 1
-            : state.completedSessions;
+        final newCompleted =
+            state.mode == PomodoroMode.focus
+                ? state.completedSessions + 1
+                : state.completedSessions;
         emit(
           state.copyWith(
             remainingSeconds: 0,

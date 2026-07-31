@@ -1,9 +1,9 @@
-import '../datasources/onboarding_local_datasource.dart';
+import '../datasources/onBoarding_local_datasource.dart';
 
-class OnboardingRepository {
-  final OnboardingLocalDataSource _dataSource;
+class OnBoardingRepository {
+  final OnBoardingLocalDataSource _dataSource;
 
-  OnboardingRepository(this._dataSource);
+  OnBoardingRepository(this._dataSource);
 
   //check if onboarding is completed
   Future<bool> isOnboardingCompleted() => _dataSource.isOnboardingCompleted();

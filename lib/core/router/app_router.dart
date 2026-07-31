@@ -7,8 +7,8 @@ import 'package:todo/features/Profile/profile.dart';
 import 'package:todo/features/add_todo/add_todo_page.dart';
 import 'package:todo/features/auth/presentation/pages/login_screen.dart';
 import 'package:todo/features/home/presentation/page/home_navigation_page.dart';
-import 'package:todo/features/onboarding/presentation/page/onboarding_screen.dart';
-import 'package:todo/features/splash/logic/splash_manager.dart';
+import 'package:todo/features/onboarding/presentation/page/on_boarding_screen.dart';
+import 'package:todo/features/splash/logic/splash_cubit.dart';
 import 'package:todo/features/splash/page/splash_screen.dart';
 
 abstract final class AppRoutes {
@@ -20,7 +20,7 @@ abstract final class AppRoutes {
   static const profile = '/profile';
 }
 
-GoRouter createAppRouter({required SplashManager splashManager}) {
+GoRouter createAppRouter({required SplashCubit splashManager}) {
   return GoRouter(
     initialLocation: AppRoutes.splash,
 
