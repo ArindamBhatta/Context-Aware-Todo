@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:todo/core/cubit/theme_bloc.dart';
+import 'package:todo/core/router/app_router.dart';
+import 'package:todo/core/theme/app_theme.dart';
 import 'package:todo/data/todo_repository.dart';
 import 'package:todo/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:todo/features/auth/data/repositories/auth_repository.dart';
@@ -76,8 +79,46 @@ class TodoApp extends StatelessWidget {
           //Pomodoro Cubit
           BlocProvider(create: (context) => PomodoroCubit()),
         ],
-        child: Placeholder(),
+        child: AppView(),
       ),
+    );
+  }
+}
+
+class AppView extends StatefulWidget {
+  const AppView({super.key});
+  @override
+  State<AppView> createState() => _AppViewState();
+}
+
+class _AppViewState extends State<AppView> {
+  late final GoRouter _router;
+
+  @override
+  void initState() {
+    super.initState();
+    // Access providers via context once providers are mounted
+    _router = createAppRouter(splashManager: context.read<SplashCubit>());
+  }
+
+  @override
+  void dispose() {
+    _router.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, state) {
+        return MaterialApp.router(
+          title: 'Todo App',
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: state.themeMode,
+          routerConfig: _router,
+        );
+      },
     );
   }
 }
