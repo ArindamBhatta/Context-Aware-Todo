@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'dart:async';
 
 import 'package:todo/core/router/app_router.dart';
-import 'package:todo/features/onboarding/presentation/logic/on_boarding_cubitdart';
+import 'package:todo/features/onboarding/presentation/logic/on_boarding_cubit.dart';
 import 'package:todo/features/onboarding/presentation/page/widgets/scrollable_screen.dart';
 
 import 'package:todo/features/splash/logic/splash_cubit.dart';

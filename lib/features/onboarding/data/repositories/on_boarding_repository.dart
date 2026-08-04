@@ -1,14 +1,14 @@
-import '../datasources/onBoarding_local_datasource.dart';
+import 'package:todo/features/onboarding/data/service/on_boarding_local_service.dart';
 
 class OnBoardingRepository {
-  final OnBoardingLocalDataSource _dataSource;
+  final OnBoardingLocalService _service;
 
-  OnBoardingRepository(this._dataSource);
+  OnBoardingRepository(this._service);
 
   //check if onboarding is completed
-  Future<bool> isOnboardingCompleted() => _dataSource.isOnboardingCompleted();
+  Future<bool> isOnboardingCompleted() => _service.isOnboardingCompleted();
 
   //set onboarding completed status
   Future<void> setOnboardingCompleted(bool completed) =>
-      _dataSource.setOnboardingCompleted(completed);
+      _service.setOnboardingCompleted(completed);
 }

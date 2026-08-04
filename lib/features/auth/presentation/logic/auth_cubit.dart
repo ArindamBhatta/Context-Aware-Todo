@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/models/auth_user.dart';
+import '../../data/model/user_model.dart';
 import '../../data/repositories/auth_repository.dart';
 import 'auth_state.dart';
 
@@ -9,7 +9,7 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit(this._repository) : super(const AuthUnauthenticated());
 
   Future<void> syncAuthState() async {
-    final AuthUser? user = _repository.getCurrentUser();
+    final UserModel? user = _repository.getCurrentUser();
     if (user != null) {
       emit(AuthAuthenticated(user));
     } else {
@@ -20,7 +20,7 @@ class AuthCubit extends Cubit<AuthState> {
   Future<bool> signInWithGoogle() async {
     final bool isLoggedIn = await _repository.signInWithGoogle();
     if (isLoggedIn) {
-      final AuthUser? user = _repository.getCurrentUser();
+      final UserModel? user = _repository.getCurrentUser();
       if (user != null) {
         emit(AuthAuthenticated(user));
       }

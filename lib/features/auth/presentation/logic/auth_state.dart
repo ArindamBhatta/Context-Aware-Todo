@@ -1,4 +1,4 @@
-import '../../data/models/auth_user.dart';
+import '../../data/model/user_model.dart';
 
 sealed class AuthState {
   const AuthState();
@@ -9,7 +9,7 @@ class AuthUnauthenticated extends AuthState {
 }
 
 class AuthAuthenticated extends AuthState {
-  final AuthUser user;
+  final UserModel user;
 
   const AuthAuthenticated(this.user);
 }

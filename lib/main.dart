@@ -6,11 +6,11 @@ import 'package:todo/core/cubit/theme_bloc.dart';
 import 'package:todo/core/router/app_router.dart';
 import 'package:todo/core/theme/app_theme.dart';
 import 'package:todo/data/todo_repository.dart';
-import 'package:todo/features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:todo/features/auth/data/service/local_auth_service.dart';
 import 'package:todo/features/auth/data/repositories/auth_repository.dart';
 import 'package:todo/features/auth/presentation/logic/auth_cubit.dart';
 import 'package:todo/features/home/presentation/logic/todo_cubit.dart';
-import 'package:todo/features/onboarding/data/datasources/onBoarding_local_datasource.dart';
+import 'package:todo/features/onboarding/data/service/on_boarding_local_service.dart';
 import 'package:todo/features/onboarding/data/repositories/on_boarding_repository.dart';
 import 'package:todo/features/onboarding/presentation/logic/on_boarding_cubit.dart';
 import 'package:todo/features/pomodoro/logic/pomodoro_cubit.dart';
@@ -32,12 +32,11 @@ class TodoApp extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<AuthRepository>(
-          create: (context) => AuthRepository(AuthLocalDataSource()),
+          create: (context) => AuthRepository(LocalAuthService()),
         ),
 
         RepositoryProvider<OnBoardingRepository>(
-          create:
-              (context) => OnBoardingRepository(OnBoardingLocalDataSource()),
+          create: (context) => OnBoardingRepository(OnBoardingLocalService()),
         ),
 
         RepositoryProvider<TodoRepository>(

@@ -1,13 +1,17 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthLocalDataSource {
+class LocalAuthService {
   static const String _biometricEnabledKey = 'auth_biometric_enabled';
+
   static const String _appLockSecretHashKey = 'auth_app_lock_secret_hash';
 
+  // FlutterSecureStorage
   static const FlutterSecureStorage _defaultSecureStorage =
       FlutterSecureStorage(
         aOptions: AndroidOptions(encryptedSharedPreferences: true),
@@ -15,7 +19,7 @@ class AuthLocalDataSource {
 
   final FlutterSecureStorage _secureStorage;
 
-  AuthLocalDataSource({FlutterSecureStorage? secureStorage})
+  LocalAuthService({FlutterSecureStorage? secureStorage})
     : _secureStorage = secureStorage ?? _defaultSecureStorage;
 
   Future<bool> isBiometricEnabled() async {

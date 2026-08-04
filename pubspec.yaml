@@ -24,27 +24,29 @@ dependencies:
   sqflite: ^2.4.2
   path: ^1.9.1
   shared_preferences: ^2.5.3
+  flutter_secure_storage: ^10.3.1 # storage with Android Keystore or IOS Keychain
   google_fonts: ^6.2.1
 
   timezone: ^0.10.1 # for timezone handling
 
   dots_indicator: ^4.0.1
   flutter_bloc: ^9.1.1
-  local_auth: ^3.0.2
+
+  local_auth: ^3.0.2 # for biometric authentication
+
   firebase_core: ^4.12.1
   firebase_auth: ^6.1.0
   google_sign_in: ^6.3.0
 
-  connectivity_plus: ^7.3.0 # for checking internet connectivity
+  # connectivity_plus: ^7.3.0 # for checking internet connectivity
 
   workmanager: ^0.9.0+3 # for background tasks
 
   flutter_local_notifications: ^20.1.0
-  flutter_secure_storage: ^10.3.1
-  crypto: ^3.0.7
-  file_picker: ^8.1.7
-  image_picker: ^1.2.3
-  path_provider: ^2.1.6
+  crypto: ^3.0.7 # for hashing
+  # file_picker: ^8.1.7
+  # image_picker: ^1.2.3
+  # path_provider: ^2.1.6
 
 
 #
