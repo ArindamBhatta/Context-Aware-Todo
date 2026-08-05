@@ -29,6 +29,7 @@ class TodoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //Now Reposotory access like context.read<AuthRepository>()
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<AuthRepository>(
@@ -45,8 +46,8 @@ class TodoApp extends StatelessWidget {
       ],
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<ThemeBloc>(
-            create: (context) => ThemeBloc(initialThemeMode: ThemeMode.system),
+          BlocProvider<ThemeCubit>(
+            create: (context) => ThemeCubit(initialThemeMode: ThemeMode.system),
           ),
 
           //Splash Cubit
@@ -108,7 +109,7 @@ class _AppViewState extends State<AppView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeBloc, ThemeState>(
+    return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, state) {
         return MaterialApp.router(
           title: 'Todo App',

@@ -11,13 +11,10 @@ class LocalAuthService {
 
   static const String _appLockSecretHashKey = 'auth_app_lock_secret_hash';
 
-  // FlutterSecureStorage
-  static const FlutterSecureStorage _defaultSecureStorage =
-      FlutterSecureStorage(
-        aOptions: AndroidOptions(encryptedSharedPreferences: true),
-      );
-
   final FlutterSecureStorage _secureStorage;
+
+  static const FlutterSecureStorage _defaultSecureStorage =
+      FlutterSecureStorage();
 
   LocalAuthService({FlutterSecureStorage? secureStorage})
     : _secureStorage = secureStorage ?? _defaultSecureStorage;
@@ -38,7 +35,7 @@ class LocalAuthService {
     final String? storedHash = await _secureStorage.read(
       key: _appLockSecretHashKey,
     );
-    return storedHash != null && storedHash.isNotEmpty;
+    return (storedHash != null) && (storedHash.isNotEmpty);
   }
 
   Future<void> saveAppLockCredential(String secret) async {
