@@ -74,10 +74,6 @@ GoRouter createAppRouter({required SplashCubit splashManager}) {
         return AppRoutes.login;
       }
 
-      if (splashState is SplashNavigateToHome) {
-        return AppRoutes.home;
-      }
-
       return null;
     },
     refreshListenable: GoRouterRefreshStream(splashManager.stream),

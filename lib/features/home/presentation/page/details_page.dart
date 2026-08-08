@@ -35,18 +35,18 @@ class _DetailsPageState extends State<DetailsPage> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
+                  color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.add_task_rounded,
-                  color: Color(0xFF8B5CF6),
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Text(
                 'Add Day $dayNumber Progress',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -64,7 +64,7 @@ class _DetailsPageState extends State<DetailsPage> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               TextField(
                 controller: noteController,
                 maxLines: 2,
@@ -74,14 +74,14 @@ class _DetailsPageState extends State<DetailsPage> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: Colors.blue.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
                     Icon(Icons.notifications_active_rounded, size: 18, color: Colors.blue),
                     SizedBox(width: 8),
@@ -99,11 +99,11 @@ class _DetailsPageState extends State<DetailsPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: Text('Cancel'),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF8B5CF6),
+                backgroundColor: Theme.of(context).colorScheme.secondary,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -123,7 +123,7 @@ class _DetailsPageState extends State<DetailsPage> {
                   Navigator.pop(context);
                 }
               },
-              child: const Text('Add Progress'),
+              child: Text('Add Progress'),
             ),
           ],
         );
@@ -155,14 +155,14 @@ class _DetailsPageState extends State<DetailsPage> {
     final int totalProjectDays = task.endTime.difference(task.startTime).inDays + 1;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: Theme.of(context).colorScheme.surfaceBright,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.5,
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.arrow_back_rounded),
-          color: const Color(0xFF0F172A),
+          icon: Icon(Icons.arrow_back_rounded),
+          color: Theme.of(context).colorScheme.onSurface,
         ),
         centerTitle: true,
         title: Row(
@@ -170,14 +170,14 @@ class _DetailsPageState extends State<DetailsPage> {
           children: [
             Icon(
               isQuickWork ? Icons.bolt_rounded : Icons.folder_special_rounded,
-              color: isQuickWork ? const Color(0xFF3B82F6) : const Color(0xFF8B5CF6),
+              color: isQuickWork ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.secondary,
               size: 20,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Text(
               isQuickWork ? 'Quick Work Details' : 'Project Work Details',
-              style: const TextStyle(
-                color: Color(0xFF0F172A),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -216,7 +216,7 @@ class _DetailsPageState extends State<DetailsPage> {
                         border:
                             isUrgentImportant
                                 ? Border.all(
-                                  color: const Color(0xFFEF4444),
+                                  color: Theme.of(context).colorScheme.error,
                                   width: 1.5,
                                 )
                                 : null,
@@ -238,11 +238,11 @@ class _DetailsPageState extends State<DetailsPage> {
                                   color: Colors.white,
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              SizedBox(width: 12),
                               Expanded(
                                 child: Text(
                                   style.label,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white70,
@@ -257,13 +257,13 @@ class _DetailsPageState extends State<DetailsPage> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: isQuickWork
-                                      ? const Color(0xFF3B82F6)
-                                      : const Color(0xFF8B5CF6),
+                                      ? Theme.of(context).colorScheme.tertiary
+                                      : Theme.of(context).colorScheme.secondary,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Text(
                                   isQuickWork ? 'Quick Work' : 'Project Work',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 11,
                                     fontWeight: FontWeight.bold,
@@ -277,10 +277,10 @@ class _DetailsPageState extends State<DetailsPage> {
                                     vertical: 4,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFEF4444),
+                                    color: Theme.of(context).colorScheme.error,
                                     borderRadius: BorderRadius.circular(20),
                                   ),
-                                  child: const Text(
+                                  child: Text(
                                     'Urgent',
                                     style: TextStyle(
                                       color: Colors.white,
@@ -291,10 +291,10 @@ class _DetailsPageState extends State<DetailsPage> {
                                 ),
                             ],
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: 20),
                           Text(
                             task.name,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -302,7 +302,7 @@ class _DetailsPageState extends State<DetailsPage> {
                             ),
                           ),
                           if (task.description.isNotEmpty) ...[
-                            const SizedBox(height: 8),
+                            SizedBox(height: 8),
                             Text(
                               task.description,
                               style: TextStyle(
@@ -311,7 +311,7 @@ class _DetailsPageState extends State<DetailsPage> {
                               ),
                             ),
                           ],
-                          const SizedBox(height: 12),
+                          SizedBox(height: 12),
                           Row(
                             children: [
                               Text(
@@ -323,17 +323,17 @@ class _DetailsPageState extends State<DetailsPage> {
                                 ),
                               ),
                               if (isOverdue) ...[
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 8,
                                     vertical: 2,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFEF4444),
+                                    color: Theme.of(context).colorScheme.error,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
-                                  child: const Text(
+                                  child: Text(
                                     'Overdue',
                                     style: TextStyle(
                                       color: Colors.white,
@@ -348,16 +348,16 @@ class _DetailsPageState extends State<DetailsPage> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 24),
-                    const Text(
+                    SizedBox(height: 24),
+                    Text(
                       'Details',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF0F172A),
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     _detailCard(
                       icon: Icons.priority_high,
                       label: 'Urgency',
@@ -383,10 +383,10 @@ class _DetailsPageState extends State<DetailsPage> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: const Color(0xFF8B5CF6).withValues(alpha: 0.2)),
+                          border: Border.all(color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2)),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFF8B5CF6).withValues(alpha: 0.05),
+                              color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.05),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
@@ -398,32 +398,32 @@ class _DetailsPageState extends State<DetailsPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
+                                Text(
                                   'Project Path Timeline',
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
-                                    color: Color(0xFF0F172A),
+                                    color: Theme.of(context).colorScheme.onSurface,
                                   ),
                                 ),
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
+                                    color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
                                     '$totalProjectDays Days Duration',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.bold,
-                                      color: Color(0xFF8B5CF6),
+                                      color: Theme.of(context).colorScheme.secondary,
                                     ),
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 16),
+                            SizedBox(height: 16),
                             Row(
                               children: [
                                 // Start Date Column
@@ -431,21 +431,21 @@ class _DetailsPageState extends State<DetailsPage> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
+                                      Text(
                                         'Start Date',
                                         style: TextStyle(
                                           fontSize: 11,
-                                          color: Color(0xFF64748B),
+                                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
-                                      const SizedBox(height: 4),
+                                      SizedBox(height: 4),
                                       Text(
                                         DateFormat('MMM d, yyyy').format(task.startTime),
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.bold,
-                                          color: Color(0xFF0F172A),
+                                          color: Theme.of(context).colorScheme.onSurface,
                                         ),
                                       ),
                                     ],
@@ -460,32 +460,32 @@ class _DetailsPageState extends State<DetailsPage> {
                                       child: Container(
                                         padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
-                                          gradient: const LinearGradient(
-                                            colors: [Color(0xFF8B5CF6), Color(0xFF6B4EFF)],
+                                          gradient: LinearGradient(
+                                            colors: [Theme.of(context).colorScheme.secondary, Theme.of(context).colorScheme.primary],
                                           ),
                                           shape: BoxShape.circle,
                                           boxShadow: [
                                             BoxShadow(
-                                              color: const Color(0xFF6B4EFF).withValues(alpha: 0.3),
+                                              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
                                               blurRadius: 8,
                                               offset: const Offset(0, 2),
                                             ),
                                           ],
                                         ),
-                                        child: const Icon(
+                                        child: Icon(
                                           Icons.add_rounded,
                                           color: Colors.white,
                                           size: 22,
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(height: 4),
-                                    const Text(
+                                    SizedBox(height: 4),
+                                    Text(
                                       'Add Path Log',
                                       style: TextStyle(
                                         fontSize: 10,
                                         fontWeight: FontWeight.w600,
-                                        color: Color(0xFF8B5CF6),
+                                        color: Theme.of(context).colorScheme.secondary,
                                       ),
                                     ),
                                   ],
@@ -495,21 +495,21 @@ class _DetailsPageState extends State<DetailsPage> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      const Text(
+                                      Text(
                                         'End Date',
                                         style: TextStyle(
                                           fontSize: 11,
-                                          color: Color(0xFF64748B),
+                                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
-                                      const SizedBox(height: 4),
+                                      SizedBox(height: 4),
                                       Text(
                                         DateFormat('MMM d, yyyy').format(task.endTime),
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.bold,
-                                          color: Color(0xFF0F172A),
+                                          color: Theme.of(context).colorScheme.onSurface,
                                         ),
                                       ),
                                     ],
@@ -529,7 +529,7 @@ class _DetailsPageState extends State<DetailsPage> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: const Color(0xFFEEF2F6)),
+                          border: Border.all(color: Theme.of(context).colorScheme.surfaceContainerHighest),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -537,25 +537,25 @@ class _DetailsPageState extends State<DetailsPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
+                                Text(
                                   'Daily Progress Path',
                                   style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
-                                    color: Color(0xFF0F172A),
+                                    color: Theme.of(context).colorScheme.onSurface,
                                   ),
                                 ),
                                 Text(
                                   '${_progressLogs.length} Logged',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
-                                    color: Color(0xFF8B5CF6),
+                                    color: Theme.of(context).colorScheme.secondary,
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 12),
+                            SizedBox(height: 12),
                             if (_progressLogs.isEmpty)
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -567,13 +567,13 @@ class _DetailsPageState extends State<DetailsPage> {
                                         size: 36,
                                         color: Colors.grey.shade400,
                                       ),
-                                      const SizedBox(height: 8),
-                                      const Text(
+                                      SizedBox(height: 8),
+                                      Text(
                                         'No daily progress logged yet.\nTap (+) above to add your daily learning path.',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: Color(0xFF64748B),
+                                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                                         ),
                                       ),
                                     ],
@@ -594,38 +594,38 @@ class _DetailsPageState extends State<DetailsPage> {
                                       Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
+                                          color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
                                           borderRadius: BorderRadius.circular(8),
                                         ),
                                         child: Text(
                                           log['day'] ?? '',
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 11,
                                             fontWeight: FontWeight.bold,
-                                            color: Color(0xFF8B5CF6),
+                                            color: Theme.of(context).colorScheme.secondary,
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(width: 12),
+                                      SizedBox(width: 12),
                                       Expanded(
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               log['topic'] ?? '',
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.bold,
-                                                color: Color(0xFF0F172A),
+                                                color: Theme.of(context).colorScheme.onSurface,
                                               ),
                                             ),
                                             if ((log['notes'] ?? '').isNotEmpty) ...[
-                                              const SizedBox(height: 2),
+                                              SizedBox(height: 2),
                                               Text(
                                                 log['notes']!,
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                   fontSize: 12,
-                                                  color: Color(0xFF64748B),
+                                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                                                 ),
                                               ),
                                             ],
@@ -634,9 +634,9 @@ class _DetailsPageState extends State<DetailsPage> {
                                       ),
                                       Text(
                                         log['date'] ?? '',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 10,
-                                          color: Color(0xFF94A3B8),
+                                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                                         ),
                                       ),
                                     ],
@@ -653,7 +653,7 @@ class _DetailsPageState extends State<DetailsPage> {
                           value: 'Overdue (End date was ${DateFormat('MMM d, yyyy').format(task.endTime)})',
                         ),
                     ],
-                    const SizedBox(height: 28),
+                    SizedBox(height: 28),
                     Row(
                       children: [
                         Expanded(
@@ -666,11 +666,11 @@ class _DetailsPageState extends State<DetailsPage> {
                                 Navigator.of(context).pop();
                               }
                             },
-                            icon: const Icon(Icons.delete_outline),
-                            label: const Text('Delete'),
+                            icon: Icon(Icons.delete_outline),
+                            label: Text('Delete'),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: Colors.red,
-                              side: const BorderSide(color: Colors.red),
+                              side: BorderSide(color: Colors.red),
                               padding: const EdgeInsets.symmetric(vertical: 14),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(14),
@@ -678,7 +678,7 @@ class _DetailsPageState extends State<DetailsPage> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: 12),
                         Expanded(
                           child: FilledButton.icon(
                             onPressed: canCompleteProject
@@ -700,7 +700,7 @@ class _DetailsPageState extends State<DetailsPage> {
                             ),
                             label: Text(task.isPending ? 'Complete' : 'Reopen'),
                             style: FilledButton.styleFrom(
-                              backgroundColor: const Color(0xFF4F46E5),
+                              backgroundColor: Theme.of(context).colorScheme.primary,
                               padding: const EdgeInsets.symmetric(vertical: 14),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(14),
@@ -732,31 +732,31 @@ class _DetailsPageState extends State<DetailsPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFEEF2F6)),
+        border: Border.all(color: Theme.of(context).colorScheme.surfaceContainerHighest),
       ),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: const Color(0xFF64748B)),
-          const SizedBox(width: 12),
+          Icon(icon, size: 20, color: Theme.of(context).colorScheme.onSurfaceVariant),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   label,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF64748B),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   value,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF0F172A),
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               ],

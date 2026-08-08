@@ -19,22 +19,29 @@ class SplashCubit extends Cubit<SplashState> {
   }
 
   Future<void> _resolveNavigationState({
+    // include splash delay for the first time
     required bool includeSplashDelay,
   }) async {
-    // Keep splash visible for at least 2.5 seconds
-    final List<Future<dynamic>> tasks = <Future<dynamic>>[
+    // <-- Task #1 Check onBoarding completed? ---->
+    final List<Future<bool>> tasks = <Future<bool>>[
       _onBoardingRepository.isOnboardingCompleted(),
     ];
 
+    // <-- Task #2 Splash screen duration for atleast 2.5 seconds ---->
     if (includeSplashDelay) {
       tasks.insert(0, Future.delayed(const Duration(milliseconds: 2500)));
     }
 
-    final List<dynamic> results = await Future.wait<dynamic>(tasks);
+    // 3. Future.wait runs all tasks in the list AT THE SAME TIME (in parallel).
+    // It waits for both the 2.5s delay AND the database check to finish.
+    final List<bool> results = await Future.wait<bool>(tasks);
 
+    // 4. It's saying: "If we inserted that timer at index 0, our database check got pushed down to index 1. If we didn't insert the timer, our database check is still sitting at index 0."
     final int onBoardingIndex = includeSplashDelay ? 1 : 0;
-    final bool onBoardingCompleted = results[onBoardingIndex] as bool;
 
+    final bool onBoardingCompleted = results[onBoardingIndex];
+
+    // 6. Navigate based on the result
     if (!onBoardingCompleted) {
       emit(SplashNavigateToOnboarding());
     } else {

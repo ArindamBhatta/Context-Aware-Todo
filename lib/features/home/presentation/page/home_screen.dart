@@ -64,20 +64,20 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: CircleAvatar(
                 radius: 26,
-                backgroundColor: const Color(0xFFE2E8F0),
+                backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                 backgroundImage:
                     photoUrl != null ? NetworkImage(photoUrl) : null,
                 child:
                     photoUrl == null
-                        ? const Icon(
+                        ? Icon(
                           Icons.person_rounded,
-                          color: Color(0xFF4F46E5),
+                          color: Theme.of(context).colorScheme.primary,
                           size: 28,
                         )
                         : null,
               ),
             ),
-            const SizedBox(width: 14),
+            SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,18 +86,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     'Hello!',
                     style: TextStyle(
                       fontSize: 13,
-                      color: const Color(0xFF64748B),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  SizedBox(height: 2),
                   Text(
                     displayName,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 18,
-                      color: const Color(0xFF0F172A),
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -109,9 +109,9 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 IconButton(
                   onPressed: () {},
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.notifications_rounded,
-                    color: Color(0xFF0F172A),
+                    color: Theme.of(context).colorScheme.onSurface,
                     size: 26,
                   ),
                 ),
@@ -121,8 +121,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Container(
                     width: 8,
                     height: 8,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF5E42EB),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -146,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
       openElevation: 0,
       transitionDuration: const Duration(milliseconds: 450),
       closedColor: Colors.transparent,
-      openColor: const Color(0xFFF8FAFC),
+      openColor: Theme.of(context).colorScheme.surfaceBright,
       closedShape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
@@ -163,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
               borderRadius: BorderRadius.circular(20),
               border:
                   isUrgentImportant
-                      ? Border.all(color: const Color(0xFFEF4444), width: 1.5)
+                      ? Border.all(color: Theme.of(context).colorScheme.error, width: 1.5)
                       : null,
               image: DecorationImage(
                 image: AssetImage(
@@ -179,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 BoxShadow(
                   color:
                       isUrgentImportant
-                          ? const Color(0xFFEF4444).withValues(alpha: 0.25)
+                          ? Theme.of(context).colorScheme.error.withValues(alpha: 0.25)
                           : style.progressColor.withValues(alpha: 0.05),
                   blurRadius: isUrgentImportant ? 14 : 10,
                   offset: const Offset(0, 4),
@@ -200,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               style.label,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white70,
@@ -208,12 +208,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           if (isUrgentImportant) ...[
-                            const SizedBox(width: 4),
+                            SizedBox(width: 4),
                             Container(
                               width: 6,
                               height: 6,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFEF4444),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.error,
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -231,20 +231,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
                 Expanded(
                   child: Text(
                     task.name,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(4),
                   child: LinearProgressIndicator(
@@ -253,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     backgroundColor: Colors.white.withValues(alpha: 0.3),
                     valueColor: AlwaysStoppedAnimation<Color>(
                       isUrgentImportant
-                          ? const Color(0xFFEF4444)
+                          ? Theme.of(context).colorScheme.error
                           : style.progressColor,
                     ),
                   ),
@@ -270,7 +270,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: Theme.of(context).colorScheme.surfaceBright,
       body: SafeArea(
         child: BlocBuilder<TodoCubit, TodoState>(
           builder: (context, state) {
@@ -302,18 +302,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   // 1. Profile Header
                   _buildProfileHeader(),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
 
                   // 2. Banner Card
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF5E42EB),
+                      color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(28),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF5E42EB).withValues(alpha: 0.3),
+                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),
@@ -326,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
+                              Text(
                                 'Your today\'s task\nalmost done!',
                                 style: TextStyle(
                                   color: Colors.white,
@@ -335,7 +335,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   height: 1.3,
                                 ),
                               ),
-                              const SizedBox(height: 18),
+                              SizedBox(height: 18),
                               SizedBox(
                                 height: 38,
                                 child: ElevatedButton(
@@ -344,7 +344,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,
-                                    foregroundColor: const Color(0xFF5E42EB),
+                                    foregroundColor: Theme.of(context).colorScheme.primary,
                                     elevation: 0,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(14),
@@ -353,7 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       horizontal: 20,
                                     ),
                                   ),
-                                  child: const Text(
+                                  child: Text(
                                     'Show Analytics',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -365,7 +365,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: 12),
                         Stack(
                           alignment: Alignment.center,
                           children: [
@@ -384,7 +384,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             Text(
                               '${(completionRate * 100).toInt()}%',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -395,47 +395,47 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 28),
+                  SizedBox(height: 28),
 
                   // 3. In Progress Section
                   Row(
                     children: [
-                      const Text(
+                      Text(
                         'In Progress',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF0F172A),
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 8,
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFEEF2F6),
+                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           '${inProgressTasks.length}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF5E42EB),
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   if (state is TodoLoading)
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.symmetric(vertical: 40),
                       child: Center(
                         child: CircularProgressIndicator(
-                          color: Color(0xFF5E42EB),
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     )
@@ -455,7 +455,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: const Color(0xFFEEF2F6)),
+                        border: Border.all(color: Theme.of(context).colorScheme.surfaceContainerHighest),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -465,11 +465,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 350,
                             fit: BoxFit.contain,
                           ),
-                          const SizedBox(height: 12),
-                          const Text(
+                          SizedBox(height: 12),
+                          Text(
                             'No tasks in progress today! 🎉',
                             style: TextStyle(
-                              color: Color(0xFF64748B),
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),

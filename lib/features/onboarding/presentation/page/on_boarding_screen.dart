@@ -8,8 +8,6 @@ import 'package:todo/core/router/app_router.dart';
 import 'package:todo/features/onboarding/presentation/logic/on_boarding_cubit.dart';
 import 'package:todo/features/onboarding/presentation/page/widgets/scrollable_screen.dart';
 
-import 'package:todo/features/splash/logic/splash_cubit.dart';
-
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
 
@@ -140,22 +138,23 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       position: (currentDot).toDouble(),
                       //* Limit to original items
                       decorator: DotsDecorator(
-                        shape: const CircleBorder(
-                          side: BorderSide(color: Colors.teal, width: 0.8),
+                        shape: CircleBorder(
+                          side: BorderSide(
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                            width: 0.8,
+                          ),
                         ),
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                         spacing: const EdgeInsets.all(8.0),
-                        activeColor: Colors.white,
+                        activeColor: Theme.of(context).colorScheme.primary,
                         size: const Size(8.0, 8.0), // Size of inactive dots
                         activeSize: const Size(
                           40.0,
                           12.0,
                         ), // Size of active dot
                         activeShape: RoundedRectangleBorder(
-                          side: const BorderSide(
-                            color: Colors.black,
-                            width: 0.1,
-                          ),
+                          side: BorderSide(color: Colors.black, width: 0.1),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
@@ -176,7 +175,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF4F46E5).withValues(alpha: 0.3),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.3),
                     blurRadius: 16,
                     offset: const Offset(0, 8),
                   ),
@@ -184,22 +185,23 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               ),
               child: ElevatedButton(
                 onPressed: () async {
+                  //1.Store the data in shear preferences saves onboarding_completed = true
                   await context.read<OnBoardingCubit>().completeOnboarding();
-                  await context.read<SplashCubit>().refreshRoutingState();
 
-                  if (mounted) {
-                    context.go(AppRoutes.login);
-                  }
+                  //2. Navigate to the login screen
+                  if (!mounted) return;
+                  context.go(AppRoutes.login);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF4F46E5), // Indigo 600
+                  backgroundColor:
+                      Theme.of(context).colorScheme.primary, // Indigo 600
                   foregroundColor: Colors.white,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   "Get Started",
                   style: TextStyle(
                     fontSize: 18,
@@ -210,7 +212,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
         ],
       ),
     );
