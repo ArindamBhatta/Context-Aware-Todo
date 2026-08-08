@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:todo/features/add_todo/data/todo.dart';
-import 'package:todo/data/todo_database.dart';
+import 'package:todo/features/add_todo/data/todo_database.dart';
 
 class TodoRepository {
   Future<List<ElementTask>> fetchTasks() async {

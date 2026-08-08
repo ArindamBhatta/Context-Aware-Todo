@@ -40,7 +40,7 @@ dependencies:
 
   # connectivity_plus: ^7.3.0 # for checking internet connectivity
 
-  workmanager: ^0.9.0+3 # for background tasks
+  workmanager: ^0.10.7 # for background tasks
 
   flutter_local_notifications: ^20.1.0
   crypto: ^3.0.7 # for hashing

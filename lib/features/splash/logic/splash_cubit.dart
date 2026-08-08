@@ -22,14 +22,18 @@ class SplashCubit extends Cubit<SplashState> {
     // include splash delay for the first time
     required bool includeSplashDelay,
   }) async {
-    // <-- Task #1 Check onBoarding completed? ---->
+    // <-- Task #1 Check onBoarding completed? datatype boolean---->
     final List<Future<bool>> tasks = <Future<bool>>[
       _onBoardingRepository.isOnboardingCompleted(),
     ];
 
-    // <-- Task #2 Splash screen duration for atleast 2.5 seconds ---->
+    // <-- Task #2 Splash screen duration for atleast 2.5 seconds datatype Duration ---->
+    //now datatype mixmatch is coming
     if (includeSplashDelay) {
-      tasks.insert(0, Future.delayed(const Duration(milliseconds: 2500)));
+      tasks.insert(
+        0,
+        Future.delayed(const Duration(milliseconds: 2500), () => true),
+      );
     }
 
     // 3. Future.wait runs all tasks in the list AT THE SAME TIME (in parallel).

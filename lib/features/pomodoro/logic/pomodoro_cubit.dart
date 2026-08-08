@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/core/services/notification_service.dart';
 
-enum PomodoroMode { focus, shortBreak, longBreak }
+part 'pomodoro_state.dart';
 
 extension PomodoroModeX on PomodoroMode {
   int get defaultMinutes {
@@ -50,62 +50,12 @@ extension PomodoroModeX on PomodoroMode {
   }
 }
 
-class PomodoroState {
-  final PomodoroMode mode;
-  final int totalSeconds;
-  final int remainingSeconds;
-  final bool isRunning;
-  final int completedSessions;
-
-  const PomodoroState({
-    required this.mode,
-    required this.totalSeconds,
-    required this.remainingSeconds,
-    required this.isRunning,
-    this.completedSessions = 0,
-  });
-
-  factory PomodoroState.initial() {
-    const defaultMode = PomodoroMode.focus;
-    final total = defaultMode.defaultMinutes * 60;
-    return PomodoroState(
-      mode: defaultMode,
-      totalSeconds: total,
-      remainingSeconds: total,
-      isRunning: false,
-      completedSessions: 0,
-    );
-  }
-
-  double get progress =>
-      totalSeconds > 0 ? remainingSeconds / totalSeconds : 0.0;
-
-  String get formattedTime {
-    final minutes = (remainingSeconds ~/ 60).toString().padLeft(2, '0');
-    final seconds = (remainingSeconds % 60).toString().padLeft(2, '0');
-    return '$minutes:$seconds';
-  }
-
-  PomodoroState copyWith({
-    PomodoroMode? mode,
-    int? totalSeconds,
-    int? remainingSeconds,
-    bool? isRunning,
-    int? completedSessions,
-  }) {
-    return PomodoroState(
-      mode: mode ?? this.mode,
-      totalSeconds: totalSeconds ?? this.totalSeconds,
-      remainingSeconds: remainingSeconds ?? this.remainingSeconds,
-      isRunning: isRunning ?? this.isRunning,
-      completedSessions: completedSessions ?? this.completedSessions,
-    );
-  }
-}
-
 class PomodoroCubit extends Cubit<PomodoroState> {
+  // Timer for the pomodoro
   Timer? _timer;
+  //Notification service for the pomodoro
   final NotificationService _notificationService;
+  // Notification id for the pomodoro
   static const int _notificationId = 1001;
 
   PomodoroCubit({NotificationService? notificationService})
@@ -116,7 +66,9 @@ class PomodoroCubit extends Cubit<PomodoroState> {
     _timer?.cancel();
     _notificationService.cancelNotification(_notificationId);
 
-    final totalSeconds = mode.defaultMinutes * 60;
+    final int totalSeconds = mode.defaultMinutes * 60;
+
+    //? Update the state with the new mode
     emit(
       state.copyWith(
         mode: mode,
@@ -132,7 +84,7 @@ class PomodoroCubit extends Cubit<PomodoroState> {
 
     _timer?.cancel();
 
-    // Schedule local system notification so Android/iOS Notification Manager triggers it even if app is backgrounded or closed.
+    //? Schedule local system notification so Android/iOS Notification Manager triggers it even if app is backgrounded or closed.
     _notificationService.scheduleNotification(
       id: _notificationId,
       title: state.mode.completionNotificationTitle,
@@ -145,6 +97,7 @@ class PomodoroCubit extends Cubit<PomodoroState> {
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (state.remainingSeconds <= 1) {
         _timer?.cancel();
+        //? This is for Android and iOS to show notification when app is open
         _notificationService.showNotification(
           id: _notificationId,
           title: state.mode.completionNotificationTitle,
