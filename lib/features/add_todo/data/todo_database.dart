@@ -32,7 +32,8 @@ class TodoDatabase {
             name TEXT NOT NULL,
             description TEXT NOT NULL DEFAULT '',
             start_time TEXT NOT NULL,
-            end_time TEXT NOT NULL DEFAULT ''
+            end_time TEXT NOT NULL DEFAULT '',
+            is_synced INTEGER DEFAULT 0 
           )
         ''');
       },

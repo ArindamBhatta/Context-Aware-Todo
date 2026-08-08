@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:todo/features/add_todo/data/todo.dart';
-import 'package:todo/data/todo_repository.dart';
+import 'package:todo/features/add_todo/data/todo_repository.dart';
 
 part 'todo_state.dart';
 

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo/core/cubit/theme_bloc.dart';
 import 'package:todo/core/router/app_router.dart';
+import 'package:todo/core/services/background_sync_service.dart';
 import 'package:todo/core/theme/app_theme.dart';
 import 'package:todo/features/add_todo/data/todo_repository.dart';
 import 'package:todo/features/auth/data/service/local_auth_service.dart';
@@ -16,11 +17,26 @@ import 'package:todo/features/onboarding/presentation/logic/on_boarding_cubit.da
 import 'package:todo/features/pomodoro/logic/pomodoro_cubit.dart';
 import 'package:todo/features/splash/logic/splash_cubit.dart';
 import 'package:todo/core/services/notification_service.dart';
+import 'package:workmanager/workmanager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await NotificationService().init();
+  Workmanager().initialize(
+    callbackDispatcher, // The top level function
+  );
+
+  Workmanager().registerPeriodicTask(
+    "1", // A unique ID for this task
+    "nightlyFirebaseSync", // The name of the task
+    frequency: const Duration(hours: 24), // How often it runs
+    constraints: Constraints(
+      networkType: NetworkType.connected, // Only run if internet is available
+      requiresCharging:
+          true, // Only run if phone is plugged in (optional, but good for night syncs)
+    ),
+  );
   runApp(const TodoApp());
 }
 
