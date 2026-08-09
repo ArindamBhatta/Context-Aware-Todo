@@ -24,6 +24,13 @@ class TodoCubit extends Cubit<TodoState> {
     await _loadTasks();
   }
 
+  String? _currentLocationCategory;
+
+  void setLocationCategory(String? category) {
+    _currentLocationCategory = category;
+    _refresh();
+  }
+
   Future<void> _loadTasks() async {
     final tasks = await _repository.fetchTasks();
     if (tasks.isEmpty) {
@@ -31,7 +38,12 @@ class TodoCubit extends Cubit<TodoState> {
       return;
     }
 
-    emit(TodoLoaded(tasks));
+    List<TodoModel> filteredTasks = tasks;
+    if (_currentLocationCategory != null) {
+      filteredTasks = tasks.where((t) => t.category == _currentLocationCategory).toList();
+    }
+
+    emit(TodoLoaded(filteredTasks));
   }
 
   Future<void> addTask(TodoModel task) async {

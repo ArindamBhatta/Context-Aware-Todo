@@ -21,7 +21,7 @@ class TodoDatabase {
 
     return openDatabase(
       path,
-      version: 3,
+      version: 4,
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE tasks(
@@ -36,6 +36,13 @@ class TodoDatabase {
             is_synced INTEGER DEFAULT 0 
           )
         ''');
+        await db.execute('''
+          CREATE TABLE locations(
+            category TEXT PRIMARY KEY,
+            latitude REAL NOT NULL,
+            longitude REAL NOT NULL
+          )
+        ''');
       },
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 3) {
@@ -45,6 +52,15 @@ class TodoDatabase {
           await db.execute(
             "ALTER TABLE tasks ADD COLUMN end_time TEXT NOT NULL DEFAULT ''",
           );
+        }
+        if (oldVersion < 4) {
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS locations(
+              category TEXT PRIMARY KEY,
+              latitude REAL NOT NULL,
+              longitude REAL NOT NULL
+            )
+          ''');
         }
       },
     );

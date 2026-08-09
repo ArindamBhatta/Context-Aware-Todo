@@ -9,6 +9,7 @@ import 'package:todo/features/home/presentation/logic/todo_cubit.dart';
 import 'package:todo/features/home/presentation/page/details_page.dart';
 import 'package:todo/features/home/presentation/page/widgets/category_style.dart';
 import 'package:todo/features/home/presentation/page/widgets/shake_widget.dart';
+import 'package:todo/core/services/location_tracker_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,6 +19,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final LocationTrackerService _locationService = LocationTrackerService();
+
   int _getUrgencyPriority(String urgencyLevel) {
     switch (urgencyLevel) {
       case 'Urgent Important':
@@ -36,6 +39,145 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkLocationAndPrompt();
+    });
+  }
+
+  Future<void> _checkLocationAndPrompt() async {
+    final position = await _locationService.getCurrentLocation();
+    if (position == null) return;
+
+    final category =
+        await _locationService.getCurrentLocationCategory(position);
+
+    if (category != null) {
+      // Existing location matches current location: showDialog is not showing.
+      if (mounted) context.read<TodoCubit>().setLocationCategory(category);
+    } else {
+      // Current location != existing location: showDialog is showing.
+      final hasHome = await _locationService.hasHomeLocation();
+      final hasOffice = await _locationService.hasOfficeLocation();
+
+      if (!hasHome) {
+        if (!mounted) return;
+        _showLocationPrompt(
+          title: "Is this your home?",
+          onYes: () async {
+            await _locationService.setHomeLocation(
+              position.latitude,
+              position.longitude,
+            );
+            if (mounted) context.read<TodoCubit>().setLocationCategory("Home");
+          },
+          onNo: () async {
+            if (!hasOffice) {
+              if (!mounted) return;
+              _showLocationPrompt(
+                title: "Is this your office?",
+                onYes: () async {
+                  await _locationService.setOfficeLocation(
+                    position.latitude,
+                    position.longitude,
+                  );
+                  if (mounted) {
+                    context.read<TodoCubit>().setLocationCategory("Office");
+                  }
+                },
+                onNo: () {
+                  if (mounted) {
+                    context.read<TodoCubit>().setLocationCategory(null);
+                  }
+                },
+              );
+            } else {
+              if (mounted) context.read<TodoCubit>().setLocationCategory(null);
+            }
+          },
+        );
+      } else if (!hasOffice) {
+        if (!mounted) return;
+        _showLocationPrompt(
+          title: "Is this your office?",
+          onYes: () async {
+            await _locationService.setOfficeLocation(
+              position.latitude,
+              position.longitude,
+            );
+            if (mounted) {
+              context.read<TodoCubit>().setLocationCategory("Office");
+            }
+          },
+          onNo: () {
+            if (mounted) context.read<TodoCubit>().setLocationCategory(null);
+          },
+        );
+      } else {
+        if (!mounted) return;
+        _showLocationPrompt(
+          title: "Is this your home?",
+          onYes: () async {
+            await _locationService.setHomeLocation(
+              position.latitude,
+              position.longitude,
+            );
+            if (mounted) context.read<TodoCubit>().setLocationCategory("Home");
+          },
+          onNo: () {
+            if (!mounted) return;
+            _showLocationPrompt(
+              title: "Is this your office?",
+              onYes: () async {
+                await _locationService.setOfficeLocation(
+                  position.latitude,
+                  position.longitude,
+                );
+                if (mounted) {
+                  context.read<TodoCubit>().setLocationCategory("Office");
+                }
+              },
+              onNo: () {
+                if (mounted) {
+                  context.read<TodoCubit>().setLocationCategory(null);
+                }
+              },
+            );
+          },
+        );
+      }
+    }
+  }
+
+  void _showLocationPrompt({
+    required String title,
+    required VoidCallback onYes,
+    VoidCallback? onNo,
+  }) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder:
+          (ctx) => AlertDialog(
+            title: const Text("Location Setup"),
+            content: Text(title),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                  if (onNo != null) onNo();
+                },
+                child: const Text("No"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                  onYes();
+                },
+                child: const Text("Yes"),
+              ),
+            ],
+          ),
+    );
   }
 
   Widget _buildProfileHeader() {
