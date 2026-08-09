@@ -6,7 +6,7 @@ import 'package:todo/core/cubit/theme_bloc.dart';
 import 'package:todo/core/router/app_router.dart';
 import 'package:todo/core/services/background_sync_service.dart';
 import 'package:todo/core/theme/app_theme.dart';
-import 'package:todo/features/add_todo/data/todo_repository.dart';
+import 'package:todo/features/add_todo/data/repo/todo_repository.dart';
 import 'package:todo/features/auth/data/service/local_auth_service.dart';
 import 'package:todo/features/auth/data/repositories/auth_repository.dart';
 import 'package:todo/features/auth/presentation/logic/auth_cubit.dart';

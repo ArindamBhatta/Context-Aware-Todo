@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:todo/features/add_todo/data/todo.dart';
+import 'package:todo/features/add_todo/data/model/todo.dart';
 import 'package:todo/features/home/presentation/logic/todo_cubit.dart';
 
 class TasksPage extends StatefulWidget {
@@ -296,7 +296,7 @@ class _TasksPageState extends State<TasksPage> {
     );
   }
 
-  Widget _buildTaskCard(ElementTask task) {
+  Widget _buildTaskCard(TodoModel task) {
     final isDone = !task.isPending;
     final statusText = isDone ? 'Done' : 'To-do';
 

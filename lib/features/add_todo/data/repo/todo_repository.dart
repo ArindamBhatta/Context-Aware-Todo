@@ -1,17 +1,17 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:todo/features/add_todo/data/todo.dart';
-import 'package:todo/features/add_todo/data/todo_database.dart';
+import 'package:todo/features/add_todo/data/model/todo.dart';
+import 'package:todo/features/add_todo/data/cache/todo_database.dart';
 
 class TodoRepository {
-  Future<List<ElementTask>> fetchTasks() async {
+  Future<List<TodoModel>> fetchTasks() async {
     final db = await TodoDatabase.instance.database;
     //get all tasks sorted by start_time ascending
     final rows = await db.query('tasks', orderBy: 'start_time ASC');
     //convert rows to ElementTask list
-    return rows.map(ElementTask.fromJson).toList();
+    return rows.map(TodoModel.fromJson).toList();
   }
 
-  Future<void> insertTask(ElementTask task) async {
+  Future<void> insertTask(TodoModel task) async {
     final db = await TodoDatabase.instance.database;
     await db.insert(
       'tasks',
@@ -21,7 +21,7 @@ class TodoRepository {
     );
   }
 
-  Future<void> updateTask(ElementTask task) async {
+  Future<void> updateTask(TodoModel task) async {
     final db = await TodoDatabase.instance.database;
     await db.update(
       'tasks',

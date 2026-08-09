@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:todo/features/add_todo/data/todo.dart';
+import 'package:todo/features/add_todo/data/model/todo.dart';
 import 'package:todo/features/home/presentation/logic/todo_cubit.dart';
 
 class AddTodoPage extends StatefulWidget {
@@ -27,7 +27,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
   late TimeOfDay startTime;
   late TimeOfDay endTime;
 
-  UrgencyLevel urgencyLevel = UrgencyLevel.urgentImportant;
+  TodoUrgencyLevel urgencyLevel = TodoUrgencyLevel.urgentImportant;
 
   @override
   void initState() {
@@ -38,10 +38,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
 
     final now = TimeOfDay.now();
     startTime = now;
-    endTime = TimeOfDay(
-      hour: (now.hour + 1) % 24,
-      minute: now.minute,
-    );
+    endTime = TimeOfDay(hour: (now.hour + 1) % 24, minute: now.minute);
   }
 
   DateTime _today() {
@@ -59,7 +56,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: Theme.of(context).colorScheme.shadow,
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -79,7 +76,9 @@ class _AddTodoPageState extends State<AddTodoPage> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(primary: Color(0xFF6B4EFF)),
+            colorScheme: ColorScheme.light(
+              primary: Theme.of(context).colorScheme.primary,
+            ),
           ),
           child: child!,
         );
@@ -207,8 +206,12 @@ class _AddTodoPageState extends State<AddTodoPage> {
                                     fontWeight: FontWeight.w700,
                                     color:
                                         isSelected
-                                            ? const Color(0xFF6B4EFF)
-                                            : const Color(0xFF1E1E2D),
+                                            ? Theme.of(
+                                              context,
+                                            ).colorScheme.primary
+                                            : Theme.of(
+                                              context,
+                                            ).colorScheme.onSurface,
                                   ),
                                 ),
                               ),
@@ -232,7 +235,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
   }
 
   Future<void> _showUrgencyPicker() async {
-    final selected = await showModalBottomSheet<UrgencyLevel>(
+    final selected = await showModalBottomSheet<TodoUrgencyLevel>(
       context: context,
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
@@ -255,7 +258,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                ...UrgencyLevel.values.map((level) {
+                ...TodoUrgencyLevel.values.map((level) {
                   final isSelected = level == urgencyLevel;
                   return ListTile(
                     contentPadding: EdgeInsets.zero,
@@ -269,7 +272,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
-                        getIconData(level.value),
+                        getTodoIconData(level.value),
                         color:
                             isSelected
                                 ? const Color(0xFF6B4EFF)
@@ -351,7 +354,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
       taskEnd = endDate;
     }
 
-    final task = ElementTask(
+    final task = TodoModel(
       id: uuid.v4(),
       name: trimmedName,
       description: description,
@@ -455,19 +458,23 @@ class _AddTodoPageState extends State<AddTodoPage> {
                               duration: const Duration(milliseconds: 200),
                               padding: const EdgeInsets.symmetric(vertical: 12),
                               decoration: BoxDecoration(
-                                color: selectedTabIndex == 0
-                                    ? Colors.white
-                                    : Colors.transparent,
+                                color:
+                                    selectedTabIndex == 0
+                                        ? Colors.white
+                                        : Colors.transparent,
                                 borderRadius: BorderRadius.circular(12),
-                                boxShadow: selectedTabIndex == 0
-                                    ? [
-                                        BoxShadow(
-                                          color: Colors.black.withValues(alpha: 0.05),
-                                          blurRadius: 8,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ]
-                                    : [],
+                                boxShadow:
+                                    selectedTabIndex == 0
+                                        ? [
+                                          BoxShadow(
+                                            color: Colors.black.withValues(
+                                              alpha: 0.05,
+                                            ),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ]
+                                        : [],
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -475,9 +482,10 @@ class _AddTodoPageState extends State<AddTodoPage> {
                                   Icon(
                                     Icons.bolt_rounded,
                                     size: 18,
-                                    color: selectedTabIndex == 0
-                                        ? const Color(0xFF6B4EFF)
-                                        : const Color(0xFF8F93A4),
+                                    color:
+                                        selectedTabIndex == 0
+                                            ? const Color(0xFF6B4EFF)
+                                            : const Color(0xFF8F93A4),
                                   ),
                                   const SizedBox(width: 6),
                                   Text(
@@ -485,9 +493,10 @@ class _AddTodoPageState extends State<AddTodoPage> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
-                                      color: selectedTabIndex == 0
-                                          ? const Color(0xFF6B4EFF)
-                                          : const Color(0xFF8F93A4),
+                                      color:
+                                          selectedTabIndex == 0
+                                              ? const Color(0xFF6B4EFF)
+                                              : const Color(0xFF8F93A4),
                                     ),
                                   ),
                                 ],
@@ -506,19 +515,23 @@ class _AddTodoPageState extends State<AddTodoPage> {
                               duration: const Duration(milliseconds: 200),
                               padding: const EdgeInsets.symmetric(vertical: 12),
                               decoration: BoxDecoration(
-                                color: selectedTabIndex == 1
-                                    ? Colors.white
-                                    : Colors.transparent,
+                                color:
+                                    selectedTabIndex == 1
+                                        ? Colors.white
+                                        : Colors.transparent,
                                 borderRadius: BorderRadius.circular(12),
-                                boxShadow: selectedTabIndex == 1
-                                    ? [
-                                        BoxShadow(
-                                          color: Colors.black.withValues(alpha: 0.05),
-                                          blurRadius: 8,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ]
-                                    : [],
+                                boxShadow:
+                                    selectedTabIndex == 1
+                                        ? [
+                                          BoxShadow(
+                                            color: Colors.black.withValues(
+                                              alpha: 0.05,
+                                            ),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ]
+                                        : [],
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -526,9 +539,10 @@ class _AddTodoPageState extends State<AddTodoPage> {
                                   Icon(
                                     Icons.folder_special_rounded,
                                     size: 18,
-                                    color: selectedTabIndex == 1
-                                        ? const Color(0xFF6B4EFF)
-                                        : const Color(0xFF8F93A4),
+                                    color:
+                                        selectedTabIndex == 1
+                                            ? const Color(0xFF6B4EFF)
+                                            : const Color(0xFF8F93A4),
                                   ),
                                   const SizedBox(width: 6),
                                   Text(
@@ -536,9 +550,10 @@ class _AddTodoPageState extends State<AddTodoPage> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
-                                      color: selectedTabIndex == 1
-                                          ? const Color(0xFF6B4EFF)
-                                          : const Color(0xFF8F93A4),
+                                      color:
+                                          selectedTabIndex == 1
+                                              ? const Color(0xFF6B4EFF)
+                                              : const Color(0xFF8F93A4),
                                     ),
                                   ),
                                 ],
@@ -626,11 +641,15 @@ class _AddTodoPageState extends State<AddTodoPage> {
                             fontWeight: FontWeight.w600,
                           ),
                           decoration: InputDecoration(
-                            hintText: selectedTabIndex == 0
-                                ? 'e.g., Take medicine, Clean room'
-                                : 'Enter project name',
+                            hintText:
+                                selectedTabIndex == 0
+                                    ? 'e.g., Take medicine, Clean room'
+                                    : 'Enter project name',
                             isDense: true,
-                            contentPadding: const EdgeInsets.only(top: 8, bottom: 8),
+                            contentPadding: const EdgeInsets.only(
+                              top: 8,
+                              bottom: 8,
+                            ),
                             border: InputBorder.none,
                           ),
                           validator: (value) {
@@ -675,11 +694,15 @@ class _AddTodoPageState extends State<AddTodoPage> {
                             height: 1.5,
                           ),
                           decoration: InputDecoration(
-                            hintText: selectedTabIndex == 0
-                                ? 'Enter task description (optional)'
-                                : 'Enter project description (optional)',
+                            hintText:
+                                selectedTabIndex == 0
+                                    ? 'Enter task description (optional)'
+                                    : 'Enter project description (optional)',
                             isDense: true,
-                            contentPadding: const EdgeInsets.only(top: 12, bottom: 8),
+                            contentPadding: const EdgeInsets.only(
+                              top: 12,
+                              bottom: 8,
+                            ),
                             border: InputBorder.none,
                           ),
                           onChanged: (val) => description = val,
@@ -825,7 +848,9 @@ class _AddTodoPageState extends State<AddTodoPage> {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    DateFormat('dd MMMM, yyyy').format(startDate),
+                                    DateFormat(
+                                      'dd MMMM, yyyy',
+                                    ).format(startDate),
                                     style: const TextStyle(
                                       fontSize: 16,
                                       color: Color(0xFF1E1E2D),
@@ -910,7 +935,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(
-                              getIconData(urgencyLevel.value),
+                              getTodoIconData(urgencyLevel.value),
                               color: const Color(0xFFF59E0B),
                               size: 24,
                             ),
@@ -976,7 +1001,9 @@ class _AddTodoPageState extends State<AddTodoPage> {
                       ),
                       onPressed: _saveTask,
                       child: Text(
-                        selectedTabIndex == 0 ? 'Add Quick Task' : 'Add Project',
+                        selectedTabIndex == 0
+                            ? 'Add Quick Task'
+                            : 'Add Project',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,

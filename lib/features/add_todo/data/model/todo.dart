@@ -4,17 +4,19 @@ import 'package:uuid/uuid.dart';
 
 const Uuid uuid = Uuid();
 
-enum UrgencyLevel {
+//Urgency Levels
+enum TodoUrgencyLevel {
   urgentImportant("Urgent Important"),
   notUrgentImportant("Not Urgent Important"),
   notImportantUrgent("Not Important Urgent"),
   notImportantNotUrgent("Not Important Not Urgent");
 
   final String value;
-  const UrgencyLevel(this.value);
+  const TodoUrgencyLevel(this.value);
 }
 
-IconData getIconData(String urgencyLevel) {
+//Urgency Level Icons
+IconData getTodoIconData(String urgencyLevel) {
   switch (urgencyLevel) {
     case 'Urgent Important':
       return Icons.priority_high;
@@ -29,6 +31,7 @@ IconData getIconData(String urgencyLevel) {
   }
 }
 
+// Different Categories of Todos
 enum Category {
   office("Office"),
   health("Health"),
@@ -56,7 +59,7 @@ final Map<String, String> categoryImageMap = {
   'Fun': 'assets/images/categories/Fun.jpg',
 };
 
-class ElementTask {
+class TodoModel {
   final String id;
   final String category;
   final String name;
@@ -66,7 +69,7 @@ class ElementTask {
   final String urgencyLevel;
   final bool isPending;
 
-  ElementTask({
+  TodoModel({
     String? id,
     required this.category,
     required this.name,
@@ -77,7 +80,7 @@ class ElementTask {
     required this.isPending,
   }) : id = id ?? uuid.v4();
 
-  ElementTask copyWith({
+  TodoModel copyWith({
     String? id,
     String? category,
     String? name,
@@ -87,7 +90,7 @@ class ElementTask {
     String? urgencyLevel,
     bool? isPending,
   }) {
-    return ElementTask(
+    return TodoModel(
       id: id ?? this.id,
       category: category ?? this.category,
       name: name ?? this.name,
@@ -99,6 +102,20 @@ class ElementTask {
     );
   }
 
+  Map<String, Object?> toJson() {
+    return {
+      'id': id,
+      'category': category,
+      'name': name,
+      'description': description,
+      'start_time': startTime.toIso8601String(),
+      'end_time': endTime.toIso8601String(),
+      'urgency_level': urgencyLevel,
+      'is_pending': isPending ? 1 : 0,
+    };
+  }
+
+  //
   static String _readString(
     Map<String, Object?> json,
     List<String> keys, {
@@ -132,6 +149,7 @@ class ElementTask {
     return fallback;
   }
 
+  //SQLite stores booleans as 1/0(num).
   static bool _readBool(
     Map<String, Object?> json,
     List<String> keys, {
@@ -161,26 +179,13 @@ class ElementTask {
     return fallback;
   }
 
-  Map<String, Object?> toJson() {
-    return {
-      'id': id,
-      'category': category,
-      'name': name,
-      'description': description,
-      'start_time': startTime.toIso8601String(),
-      'end_time': endTime.toIso8601String(),
-      'urgency_level': urgencyLevel,
-      'is_pending': isPending ? 1 : 0,
-    };
-  }
-
-  factory ElementTask.fromJson(Map<String, Object?> json) {
+  factory TodoModel.fromJson(Map<String, Object?> json) {
     final startTime = _readDateTime(json, [
       'start_time',
     ], fallback: DateTime.now());
     final endTime = _readDateTime(json, ['end_time'], fallback: startTime);
 
-    return ElementTask(
+    return TodoModel(
       id: _readString(json, ['id'], fallback: uuid.v4()),
       category: _readString(json, [
         'category',
@@ -191,7 +196,7 @@ class ElementTask {
       endTime: endTime,
       urgencyLevel: _readString(json, [
         'urgency_level',
-      ], fallback: UrgencyLevel.notUrgentImportant.value),
+      ], fallback: TodoUrgencyLevel.notUrgentImportant.value),
       isPending: _readBool(json, ['is_pending'], fallback: true),
     );
   }

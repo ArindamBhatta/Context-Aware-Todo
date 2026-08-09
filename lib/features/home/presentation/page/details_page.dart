@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:todo/features/add_todo/data/todo.dart';
+import 'package:todo/features/add_todo/data/model/todo.dart';
 import 'package:todo/features/home/presentation/logic/todo_cubit.dart';
 import 'package:todo/features/home/presentation/page/widgets/category_style.dart';
 
 class DetailsPage extends StatefulWidget {
-  final ElementTask task;
+  final TodoModel task;
 
   const DetailsPage({super.key, required this.task});
 
@@ -35,7 +35,9 @@ class _DetailsPageState extends State<DetailsPage> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.secondary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
@@ -46,10 +48,7 @@ class _DetailsPageState extends State<DetailsPage> {
               SizedBox(width: 12),
               Text(
                 'Add Day $dayNumber Progress',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -83,7 +82,11 @@ class _DetailsPageState extends State<DetailsPage> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.notifications_active_rounded, size: 18, color: Colors.blue),
+                    Icon(
+                      Icons.notifications_active_rounded,
+                      size: 18,
+                      color: Colors.blue,
+                    ),
                     SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -138,21 +141,31 @@ class _DetailsPageState extends State<DetailsPage> {
     final bool isUrgentImportant = task.urgencyLevel == 'Urgent Important';
 
     // Quick Work vs Project Work
-    final bool isSameDay = task.startTime.year == task.endTime.year &&
+    final bool isSameDay =
+        task.startTime.year == task.endTime.year &&
         task.startTime.month == task.endTime.month &&
         task.startTime.day == task.endTime.day;
     final bool isQuickWork = isSameDay;
 
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final taskEndDateOnly = DateTime(task.endTime.year, task.endTime.month, task.endTime.day);
+    final taskEndDateOnly = DateTime(
+      task.endTime.year,
+      task.endTime.month,
+      task.endTime.day,
+    );
 
     final bool isProjectWork = !isQuickWork;
     final bool isOverdue = task.isPending && today.isAfter(taskEndDateOnly);
-    final bool canCompleteProject = !isProjectWork || today.isAfter(taskEndDateOnly) || today.isAtSameMomentAs(taskEndDateOnly) || !task.isPending;
+    final bool canCompleteProject =
+        !isProjectWork ||
+        today.isAfter(taskEndDateOnly) ||
+        today.isAtSameMomentAs(taskEndDateOnly) ||
+        !task.isPending;
 
     // Total days in project duration
-    final int totalProjectDays = task.endTime.difference(task.startTime).inDays + 1;
+    final int totalProjectDays =
+        task.endTime.difference(task.startTime).inDays + 1;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceBright,
@@ -170,7 +183,10 @@ class _DetailsPageState extends State<DetailsPage> {
           children: [
             Icon(
               isQuickWork ? Icons.bolt_rounded : Icons.folder_special_rounded,
-              color: isQuickWork ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.secondary,
+              color:
+                  isQuickWork
+                      ? Theme.of(context).colorScheme.tertiary
+                      : Theme.of(context).colorScheme.secondary,
               size: 20,
             ),
             SizedBox(width: 8),
@@ -256,9 +272,14 @@ class _DetailsPageState extends State<DetailsPage> {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: isQuickWork
-                                      ? Theme.of(context).colorScheme.tertiary
-                                      : Theme.of(context).colorScheme.secondary,
+                                  color:
+                                      isQuickWork
+                                          ? Theme.of(
+                                            context,
+                                          ).colorScheme.tertiary
+                                          : Theme.of(
+                                            context,
+                                          ).colorScheme.secondary,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Text(
@@ -367,12 +388,16 @@ class _DetailsPageState extends State<DetailsPage> {
                       _detailCard(
                         icon: Icons.access_time,
                         label: 'Start Time',
-                        value: DateFormat('MMM d, yyyy  h:mm a').format(task.startTime),
+                        value: DateFormat(
+                          'MMM d, yyyy  h:mm a',
+                        ).format(task.startTime),
                       ),
                       _detailCard(
                         icon: Icons.access_time_filled,
                         label: 'End Time',
-                        value: DateFormat('MMM d, yyyy  h:mm a').format(task.endTime),
+                        value: DateFormat(
+                          'MMM d, yyyy  h:mm a',
+                        ).format(task.endTime),
                       ),
                     ] else ...[
                       // PROJECT WORK: Timeline with Start Date, (+) Add Path Icon, and End Date
@@ -383,10 +408,16 @@ class _DetailsPageState extends State<DetailsPage> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2)),
+                          border: Border.all(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.secondary.withValues(alpha: 0.2),
+                          ),
                           boxShadow: [
                             BoxShadow(
-                              color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.05),
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.secondary.withValues(alpha: 0.05),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
@@ -403,13 +434,20 @@ class _DetailsPageState extends State<DetailsPage> {
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).colorScheme.onSurface,
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
                                   ),
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary
+                                        .withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
@@ -417,7 +455,10 @@ class _DetailsPageState extends State<DetailsPage> {
                                     style: TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).colorScheme.secondary,
+                                      color:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.secondary,
                                     ),
                                   ),
                                 ),
@@ -429,23 +470,32 @@ class _DetailsPageState extends State<DetailsPage> {
                                 // Start Date Column
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Start Date',
                                         style: TextStyle(
                                           fontSize: 11,
-                                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                          color:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.onSurfaceVariant,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                       SizedBox(height: 4),
                                       Text(
-                                        DateFormat('MMM d, yyyy').format(task.startTime),
+                                        DateFormat(
+                                          'MMM d, yyyy',
+                                        ).format(task.startTime),
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.bold,
-                                          color: Theme.of(context).colorScheme.onSurface,
+                                          color:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.onSurface,
                                         ),
                                       ),
                                     ],
@@ -461,12 +511,22 @@ class _DetailsPageState extends State<DetailsPage> {
                                         padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
                                           gradient: LinearGradient(
-                                            colors: [Theme.of(context).colorScheme.secondary, Theme.of(context).colorScheme.primary],
+                                            colors: [
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.secondary,
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.primary,
+                                            ],
                                           ),
                                           shape: BoxShape.circle,
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary
+                                                  .withValues(alpha: 0.3),
                                               blurRadius: 8,
                                               offset: const Offset(0, 2),
                                             ),
@@ -485,7 +545,10 @@ class _DetailsPageState extends State<DetailsPage> {
                                       style: TextStyle(
                                         fontSize: 10,
                                         fontWeight: FontWeight.w600,
-                                        color: Theme.of(context).colorScheme.secondary,
+                                        color:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.secondary,
                                       ),
                                     ),
                                   ],
@@ -499,17 +562,25 @@ class _DetailsPageState extends State<DetailsPage> {
                                         'End Date',
                                         style: TextStyle(
                                           fontSize: 11,
-                                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                          color:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.onSurfaceVariant,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                       SizedBox(height: 4),
                                       Text(
-                                        DateFormat('MMM d, yyyy').format(task.endTime),
+                                        DateFormat(
+                                          'MMM d, yyyy',
+                                        ).format(task.endTime),
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.bold,
-                                          color: Theme.of(context).colorScheme.onSurface,
+                                          color:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.onSurface,
                                         ),
                                       ),
                                     ],
@@ -529,7 +600,12 @@ class _DetailsPageState extends State<DetailsPage> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Theme.of(context).colorScheme.surfaceContainerHighest),
+                          border: Border.all(
+                            color:
+                                Theme.of(
+                                  context,
+                                ).colorScheme.surfaceContainerHighest,
+                          ),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -542,7 +618,8 @@ class _DetailsPageState extends State<DetailsPage> {
                                   style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).colorScheme.onSurface,
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
                                   ),
                                 ),
                                 Text(
@@ -550,7 +627,8 @@ class _DetailsPageState extends State<DetailsPage> {
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
-                                    color: Theme.of(context).colorScheme.secondary,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
                                   ),
                                 ),
                               ],
@@ -558,7 +636,9 @@ class _DetailsPageState extends State<DetailsPage> {
                             SizedBox(height: 12),
                             if (_progressLogs.isEmpty)
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
                                 child: Center(
                                   child: Column(
                                     children: [
@@ -573,7 +653,10 @@ class _DetailsPageState extends State<DetailsPage> {
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                          color:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.onSurfaceVariant,
                                         ),
                                       ),
                                     ],
@@ -585,47 +668,69 @@ class _DetailsPageState extends State<DetailsPage> {
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: _progressLogs.length,
-                                separatorBuilder: (context, index) => const Divider(height: 16),
+                                separatorBuilder:
+                                    (context, index) =>
+                                        const Divider(height: 16),
                                 itemBuilder: (context, index) {
                                   final log = _progressLogs[index];
                                   return Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 4,
+                                        ),
                                         decoration: BoxDecoration(
-                                          color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
-                                          borderRadius: BorderRadius.circular(8),
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary
+                                              .withValues(alpha: 0.1),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
                                         ),
                                         child: Text(
                                           log['day'] ?? '',
                                           style: TextStyle(
                                             fontSize: 11,
                                             fontWeight: FontWeight.bold,
-                                            color: Theme.of(context).colorScheme.secondary,
+                                            color:
+                                                Theme.of(
+                                                  context,
+                                                ).colorScheme.secondary,
                                           ),
                                         ),
                                       ),
                                       SizedBox(width: 12),
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               log['topic'] ?? '',
                                               style: TextStyle(
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.bold,
-                                                color: Theme.of(context).colorScheme.onSurface,
+                                                color:
+                                                    Theme.of(
+                                                      context,
+                                                    ).colorScheme.onSurface,
                                               ),
                                             ),
-                                            if ((log['notes'] ?? '').isNotEmpty) ...[
+                                            if ((log['notes'] ?? '')
+                                                .isNotEmpty) ...[
                                               SizedBox(height: 2),
                                               Text(
                                                 log['notes']!,
                                                 style: TextStyle(
                                                   fontSize: 12,
-                                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                                  color:
+                                                      Theme.of(context)
+                                                          .colorScheme
+                                                          .onSurfaceVariant,
                                                 ),
                                               ),
                                             ],
@@ -636,7 +741,10 @@ class _DetailsPageState extends State<DetailsPage> {
                                         log['date'] ?? '',
                                         style: TextStyle(
                                           fontSize: 10,
-                                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                          color:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.onSurfaceVariant,
                                         ),
                                       ),
                                     ],
@@ -650,7 +758,8 @@ class _DetailsPageState extends State<DetailsPage> {
                         _detailCard(
                           icon: Icons.warning_amber_rounded,
                           label: 'Due Date Status',
-                          value: 'Overdue (End date was ${DateFormat('MMM d, yyyy').format(task.endTime)})',
+                          value:
+                              'Overdue (End date was ${DateFormat('MMM d, yyyy').format(task.endTime)})',
                         ),
                     ],
                     SizedBox(height: 28),
@@ -681,18 +790,17 @@ class _DetailsPageState extends State<DetailsPage> {
                         SizedBox(width: 12),
                         Expanded(
                           child: FilledButton.icon(
-                            onPressed: canCompleteProject
-                                ? () async {
-                                    await context
-                                        .read<TodoCubit>()
-                                        .toggleTaskStatus(
-                                          task.id,
-                                        );
-                                    if (context.mounted) {
-                                      Navigator.of(context).pop();
+                            onPressed:
+                                canCompleteProject
+                                    ? () async {
+                                      await context
+                                          .read<TodoCubit>()
+                                          .toggleTaskStatus(task.id);
+                                      if (context.mounted) {
+                                        Navigator.of(context).pop();
+                                      }
                                     }
-                                  }
-                                : null,
+                                    : null,
                             icon: Icon(
                               task.isPending
                                   ? Icons.check_rounded
@@ -700,7 +808,8 @@ class _DetailsPageState extends State<DetailsPage> {
                             ),
                             label: Text(task.isPending ? 'Complete' : 'Reopen'),
                             style: FilledButton.styleFrom(
-                              backgroundColor: Theme.of(context).colorScheme.primary,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
                               padding: const EdgeInsets.symmetric(vertical: 14),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(14),
@@ -732,11 +841,17 @@ class _DetailsPageState extends State<DetailsPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Theme.of(context).colorScheme.surfaceContainerHighest),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        ),
       ),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: Theme.of(context).colorScheme.onSurfaceVariant),
+          Icon(
+            icon,
+            size: 20,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
           SizedBox(width: 12),
           Expanded(
             child: Column(

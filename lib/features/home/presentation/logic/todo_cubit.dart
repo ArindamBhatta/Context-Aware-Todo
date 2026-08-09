@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:todo/features/add_todo/data/todo.dart';
-import 'package:todo/features/add_todo/data/todo_repository.dart';
+import 'package:todo/features/add_todo/data/model/todo.dart';
+import 'package:todo/features/add_todo/data/repo/todo_repository.dart';
 
 part 'todo_state.dart';
 
@@ -34,12 +34,12 @@ class TodoCubit extends Cubit<TodoState> {
     emit(TodoLoaded(tasks));
   }
 
-  Future<void> addTask(ElementTask task) async {
+  Future<void> addTask(TodoModel task) async {
     await _repository.insertTask(task);
     await _refresh();
   }
 
-  Future<void> updateTask(ElementTask task) async {
+  Future<void> updateTask(TodoModel task) async {
     await _repository.updateTask(task);
     await _refresh();
   }

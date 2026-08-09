@@ -2,7 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:todo/features/add_todo/data/todo.dart';
+import 'package:todo/features/add_todo/data/model/todo.dart';
 import 'package:todo/features/auth/presentation/logic/auth_cubit.dart';
 import 'package:todo/features/auth/presentation/logic/auth_state.dart';
 import 'package:todo/features/home/presentation/logic/todo_cubit.dart';
@@ -64,7 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: CircleAvatar(
                 radius: 26,
-                backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+                backgroundColor:
+                    Theme.of(context).colorScheme.surfaceContainerHighest,
                 backgroundImage:
                     photoUrl != null ? NetworkImage(photoUrl) : null,
                 child:
@@ -136,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildTaskCard({
-    required ElementTask task,
+    required TodoModel task,
     required CategoryStyle style,
     required double progress,
     required bool isUrgentImportant,
@@ -163,7 +164,10 @@ class _HomeScreenState extends State<HomeScreen> {
               borderRadius: BorderRadius.circular(20),
               border:
                   isUrgentImportant
-                      ? Border.all(color: Theme.of(context).colorScheme.error, width: 1.5)
+                      ? Border.all(
+                        color: Theme.of(context).colorScheme.error,
+                        width: 1.5,
+                      )
                       : null,
               image: DecorationImage(
                 image: AssetImage(
@@ -179,7 +183,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 BoxShadow(
                   color:
                       isUrgentImportant
-                          ? Theme.of(context).colorScheme.error.withValues(alpha: 0.25)
+                          ? Theme.of(
+                            context,
+                          ).colorScheme.error.withValues(alpha: 0.25)
                           : style.progressColor.withValues(alpha: 0.05),
                   blurRadius: isUrgentImportant ? 14 : 10,
                   offset: const Offset(0, 4),
@@ -274,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: BlocBuilder<TodoCubit, TodoState>(
           builder: (context, state) {
-            List<ElementTask> inProgressTasks = [];
+            List<TodoModel> inProgressTasks = [];
             double completionRate = 0.0;
 
             if (state is TodoLoaded) {
@@ -313,7 +319,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       borderRadius: BorderRadius.circular(28),
                       boxShadow: [
                         BoxShadow(
-                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primary.withValues(alpha: 0.3),
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),
@@ -344,7 +352,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,
-                                    foregroundColor: Theme.of(context).colorScheme.primary,
+                                    foregroundColor:
+                                        Theme.of(context).colorScheme.primary,
                                     elevation: 0,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(14),
@@ -415,7 +424,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                          color:
+                              Theme.of(
+                                context,
+                              ).colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
@@ -455,7 +467,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Theme.of(context).colorScheme.surfaceContainerHighest),
+                        border: Border.all(
+                          color:
+                              Theme.of(
+                                context,
+                              ).colorScheme.surfaceContainerHighest,
+                        ),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -469,7 +486,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           Text(
                             'No tasks in progress today! 🎉',
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              color:
+                                  Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),
