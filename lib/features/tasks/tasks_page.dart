@@ -24,14 +24,6 @@ class _TasksPageState extends State<TasksPage> {
       appBar: AppBar(
         backgroundColor: colorScheme.surfaceBright,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_new,
-            color: colorScheme.onSurface,
-            size: 20,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
         title: Text(
           "Today's Tasks",
           style: TextStyle(
@@ -41,12 +33,6 @@ class _TasksPageState extends State<TasksPage> {
           ),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.notifications_active, color: colorScheme.onSurface),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: SafeArea(
         child: Column(
@@ -69,12 +55,18 @@ class _TasksPageState extends State<TasksPage> {
                 builder: (context, state) {
                   if (state is TodoLoading) {
                     return Center(
-                      child: CircularProgressIndicator(color: colorScheme.primary),
+                      child: CircularProgressIndicator(
+                        color: colorScheme.primary,
+                      ),
                     );
                   }
                   if (state is TaskError) {
+                    debugPrint(state.message);
                     return Center(
-                      child: Text('Failed to load tasks: ${state.message}'),
+                      child: Text(
+                        'Failed to load tasks',
+                        style: TextStyle(color: colorScheme.onSurface),
+                      ),
                     );
                   }
                   if (state is TodoEmpty) {
@@ -84,7 +76,7 @@ class _TasksPageState extends State<TasksPage> {
                         children: [
                           Image.asset(
                             'assets/images/no_todo.png',
-                            height: 200,
+                            height: 1000,
                             fit: BoxFit.contain,
                           ),
                           const SizedBox(height: 12),
@@ -123,24 +115,10 @@ class _TasksPageState extends State<TasksPage> {
 
                   if (filteredTasks.isEmpty) {
                     return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/images/no_todo.png',
-                            height: 400,
-                            fit: BoxFit.contain,
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            'No tasks found for this day',
-                            style: TextStyle(
-                              color: colorScheme.onSurfaceVariant,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
+                      child: Image.asset(
+                        'assets/images/no_todo.png',
+                        height: 1000,
+                        fit: BoxFit.contain,
                       ),
                     );
                   }
@@ -214,9 +192,10 @@ class _TasksPageState extends State<TasksPage> {
                     DateFormat('MMM').format(date),
                     style: TextStyle(
                       fontSize: 12,
-                      color: isSelected
-                          ? colorScheme.onPrimary.withValues(alpha: 0.8)
-                          : colorScheme.onSurfaceVariant,
+                      color:
+                          isSelected
+                              ? colorScheme.onPrimary.withValues(alpha: 0.8)
+                              : colorScheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -225,9 +204,10 @@ class _TasksPageState extends State<TasksPage> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: isSelected
-                          ? colorScheme.onPrimary
-                          : colorScheme.onSurface,
+                      color:
+                          isSelected
+                              ? colorScheme.onPrimary
+                              : colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -236,9 +216,10 @@ class _TasksPageState extends State<TasksPage> {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: isSelected
-                          ? colorScheme.onPrimary
-                          : colorScheme.onSurfaceVariant,
+                      color:
+                          isSelected
+                              ? colorScheme.onPrimary
+                              : colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -272,9 +253,10 @@ class _TasksPageState extends State<TasksPage> {
                     child: Text(
                       filter,
                       style: TextStyle(
-                        color: isSelected
-                            ? colorScheme.onPrimary
-                            : colorScheme.primary,
+                        color:
+                            isSelected
+                                ? colorScheme.onPrimary
+                                : colorScheme.primary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -287,8 +269,9 @@ class _TasksPageState extends State<TasksPage> {
                       });
                     }
                   },
-                  backgroundColor:
-                      colorScheme.primaryContainer.withValues(alpha: 0.3),
+                  backgroundColor: colorScheme.primaryContainer.withValues(
+                    alpha: 0.3,
+                  ),
                   selectedColor: colorScheme.primary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
@@ -344,9 +327,10 @@ class _TasksPageState extends State<TasksPage> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: isDone
-                        ? colorScheme.onSurfaceVariant
-                        : colorScheme.onSurface,
+                    color:
+                        isDone
+                            ? colorScheme.onSurfaceVariant
+                            : colorScheme.onSurface,
                     decoration: isDone ? TextDecoration.lineThrough : null,
                   ),
                 ),
@@ -378,9 +362,14 @@ class _TasksPageState extends State<TasksPage> {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: isDone
-                            ? colorScheme.primaryContainer.withValues(alpha: 0.4)
-                            : colorScheme.secondaryContainer.withValues(alpha: 0.4),
+                        color:
+                            isDone
+                                ? colorScheme.primaryContainer.withValues(
+                                  alpha: 0.4,
+                                )
+                                : colorScheme.secondaryContainer.withValues(
+                                  alpha: 0.4,
+                                ),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -388,9 +377,10 @@ class _TasksPageState extends State<TasksPage> {
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
-                          color: isDone
-                              ? colorScheme.primary
-                              : colorScheme.secondary,
+                          color:
+                              isDone
+                                  ? colorScheme.primary
+                                  : colorScheme.secondary,
                         ),
                       ),
                     ),
