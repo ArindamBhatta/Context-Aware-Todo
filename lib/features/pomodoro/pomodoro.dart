@@ -40,39 +40,40 @@ class _PomodoroViewState extends State<_PomodoroView>
 
   // Visual Theme Helper based on selected PomodoroMode
   _PomodoroTheme _getThemeForMode(PomodoroMode mode) {
+    final colorScheme = Theme.of(context).colorScheme;
     switch (mode) {
       case PomodoroMode.focus:
         return _PomodoroTheme(
-          primary: Theme.of(context).colorScheme.primary,
-          secondary: Theme.of(context).colorScheme.secondary,
+          primary: colorScheme.primary,
+          secondary: colorScheme.secondary,
           accentGradient: [
-            Theme.of(context).colorScheme.primary,
-            Color(0xFF9333EA),
+            colorScheme.primary,
+            colorScheme.secondary,
           ],
-          bgTint: Color(0xFFF5F3FF),
+          bgTint: colorScheme.primaryContainer.withValues(alpha: 0.3),
           badgeText: 'FOCUS SESSION',
           icon: Icons.psychology_rounded,
           subtitle: 'Stay focused and eliminate distractions',
         );
       case PomodoroMode.shortBreak:
-        return const _PomodoroTheme(
-          primary: Color(0xFF10B981),
-          secondary: Color(0xFF059669),
-          accentGradient: [Color(0xFF10B981), Color(0xFF14B8A6)],
-          bgTint: Color(0xFFECFDF5),
+        return _PomodoroTheme(
+          primary: colorScheme.tertiary,
+          secondary: colorScheme.secondary,
+          accentGradient: [colorScheme.tertiary, colorScheme.secondary],
+          bgTint: colorScheme.tertiaryContainer.withValues(alpha: 0.3),
           badgeText: 'SHORT BREAK',
           icon: Icons.coffee_rounded,
           subtitle: 'Take a deep breath and stretch your muscles',
         );
       case PomodoroMode.longBreak:
         return _PomodoroTheme(
-          primary: Color(0xFFF59E0B),
-          secondary: Color(0xFFD97706),
+          primary: colorScheme.secondary,
+          secondary: colorScheme.error,
           accentGradient: [
-            Color(0xFFF59E0B),
-            Theme.of(context).colorScheme.error,
+            colorScheme.secondary,
+            colorScheme.error,
           ],
-          bgTint: Color(0xFFFFFBEB),
+          bgTint: colorScheme.surfaceContainerHigh,
           badgeText: 'LONG BREAK',
           icon: Icons.beach_access_rounded,
           subtitle: 'Rest up, grab a snack, and recharge',
@@ -361,8 +362,9 @@ class _PomodoroViewState extends State<_PomodoroView>
   }
 
   Widget _buildStatusPill(PomodoroState state, _PomodoroTheme theme) {
+    final colorScheme = Theme.of(context).colorScheme;
     String statusText = 'READY TO START';
-    Color dotColor = Theme.of(context).colorScheme.onSurfaceVariant;
+    Color dotColor = colorScheme.onSurfaceVariant;
 
     if (state.isRunning) {
       statusText = 'IN PROGRESS';
@@ -370,10 +372,10 @@ class _PomodoroViewState extends State<_PomodoroView>
     } else if (state.remainingSeconds < state.totalSeconds &&
         state.remainingSeconds > 0) {
       statusText = 'PAUSED';
-      dotColor = const Color(0xFFF59E0B);
+      dotColor = colorScheme.tertiary;
     } else if (state.remainingSeconds == 0) {
       statusText = 'FINISHED!';
-      dotColor = const Color(0xFF10B981);
+      dotColor = colorScheme.primary;
     }
 
     return Row(
@@ -401,13 +403,13 @@ class _PomodoroViewState extends State<_PomodoroView>
             height: 8,
             decoration: BoxDecoration(shape: BoxShape.circle, color: dotColor),
           ),
-        SizedBox(width: 6),
+        const SizedBox(width: 6),
         Text(
           statusText,
           style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            color: colorScheme.onSurfaceVariant,
             letterSpacing: 0.8,
           ),
         ),
@@ -421,6 +423,7 @@ class _PomodoroViewState extends State<_PomodoroView>
     PomodoroCubit cubit,
     _PomodoroTheme theme,
   ) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -429,20 +432,20 @@ class _PomodoroViewState extends State<_PomodoroView>
           onPressed: cubit.resetTimer,
           iconSize: 22,
           style: IconButton.styleFrom(
-            backgroundColor: Colors.white,
-            foregroundColor: const Color(0xFF475569),
+            backgroundColor: colorScheme.surface,
+            foregroundColor: colorScheme.onSurfaceVariant,
             padding: const EdgeInsets.all(16),
             elevation: 2,
-            shadowColor: Colors.black.withValues(alpha: 0.08),
+            shadowColor: colorScheme.shadow.withValues(alpha: 0.08),
             side: BorderSide(
-              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              color: colorScheme.surfaceContainerHighest,
             ),
           ),
-          icon: Icon(Icons.replay_rounded),
+          icon: const Icon(Icons.replay_rounded),
           tooltip: 'Reset Timer',
         ),
 
-        SizedBox(width: 24),
+        const SizedBox(width: 24),
 
         // Hero Start / Pause Button
         GestureDetector(
@@ -469,12 +472,12 @@ class _PomodoroViewState extends State<_PomodoroView>
             child: Icon(
               state.isRunning ? Icons.pause_rounded : Icons.play_arrow_rounded,
               size: 38,
-              color: Colors.white,
+              color: colorScheme.onPrimary,
             ),
           ),
         ),
 
-        SizedBox(width: 24),
+        const SizedBox(width: 24),
 
         // Skip / Next Mode Button
         IconButton(
@@ -486,16 +489,16 @@ class _PomodoroViewState extends State<_PomodoroView>
           },
           iconSize: 22,
           style: IconButton.styleFrom(
-            backgroundColor: Colors.white,
-            foregroundColor: const Color(0xFF475569),
+            backgroundColor: colorScheme.surface,
+            foregroundColor: colorScheme.onSurfaceVariant,
             padding: const EdgeInsets.all(16),
             elevation: 2,
-            shadowColor: Colors.black.withValues(alpha: 0.08),
+            shadowColor: colorScheme.shadow.withValues(alpha: 0.08),
             side: BorderSide(
-              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              color: colorScheme.surfaceContainerHighest,
             ),
           ),
-          icon: Icon(Icons.skip_next_rounded),
+          icon: const Icon(Icons.skip_next_rounded),
           tooltip: 'Next Mode',
         ),
       ],
@@ -503,17 +506,18 @@ class _PomodoroViewState extends State<_PomodoroView>
   }
 
   Widget _buildInfoCards(PomodoroState state, _PomodoroTheme theme) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+          color: colorScheme.surfaceContainerHighest,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: colorScheme.shadow.withValues(alpha: 0.03),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -537,7 +541,7 @@ class _PomodoroViewState extends State<_PomodoroView>
                     color: theme.primary,
                   ),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -545,17 +549,17 @@ class _PomodoroViewState extends State<_PomodoroView>
                       'Target',
                       style: TextStyle(
                         fontSize: 11,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        color: colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(height: 2),
+                    const SizedBox(height: 2),
                     Text(
                       '${state.mode.defaultMinutes} min',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSurface,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                   ],
@@ -567,7 +571,7 @@ class _PomodoroViewState extends State<_PomodoroView>
           Container(
             height: 36,
             width: 1,
-            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            color: colorScheme.surfaceContainerHighest,
           ),
 
           // Stat 2: Progress %
@@ -578,16 +582,16 @@ class _PomodoroViewState extends State<_PomodoroView>
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFEEF2FF),
+                    color: colorScheme.primaryContainer.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Icon(
                     Icons.speed_rounded,
                     size: 20,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: colorScheme.primary,
                   ),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -595,7 +599,7 @@ class _PomodoroViewState extends State<_PomodoroView>
                       'Progress',
                       style: TextStyle(
                         fontSize: 11,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        color: colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

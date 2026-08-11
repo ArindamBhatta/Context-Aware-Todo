@@ -154,7 +154,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                           12.0,
                         ), // Size of active dot
                         activeShape: RoundedRectangleBorder(
-                          side: BorderSide(color: Colors.black, width: 0.1),
+                          side: BorderSide(
+                            color: Theme.of(context).colorScheme.outlineVariant,
+                            width: 0.1,
+                          ),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
@@ -164,7 +167,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               ],
             ),
           ),
-          Spacer(),
+          const Spacer(),
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -185,17 +188,18 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               ),
               child: ElevatedButton(
                 onPressed: () async {
-                  //1.Store the data in shear preferences saves onboarding_completed = true
-                  await context.read<OnBoardingCubit>().completeOnboarding();
+                  final cubit = context.read<OnBoardingCubit>();
+                  //1.Store the data in shared preferences saves onboarding_completed = true
+                  await cubit.completeOnboarding();
 
                   //2. Navigate to the login screen
-                  if (!mounted) return;
+                  if (!context.mounted) return;
                   context.go(AppRoutes.login);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
-                      Theme.of(context).colorScheme.primary, // Indigo 600
-                  foregroundColor: Colors.white,
+                      Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),

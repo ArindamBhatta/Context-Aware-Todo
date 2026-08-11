@@ -112,6 +112,7 @@ class TodoModel {
       'end_time': endTime.toIso8601String(),
       'urgency_level': urgencyLevel,
       'is_pending': isPending ? 1 : 0,
+      'is_synced': 0, //! To be Synced
     };
   }
 
@@ -183,17 +184,23 @@ class TodoModel {
     final startTime = _readDateTime(json, [
       'start_time',
     ], fallback: DateTime.now());
+
     final endTime = _readDateTime(json, ['end_time'], fallback: startTime);
 
     return TodoModel(
       id: _readString(json, ['id'], fallback: uuid.v4()),
+
       category: _readString(json, [
         'category',
       ], fallback: Category.personal.value),
+
       name: _readString(json, ['name'], fallback: 'Untitled task'),
+
       description: _readString(json, ['description']),
+
       startTime: startTime,
       endTime: endTime,
+
       urgencyLevel: _readString(json, [
         'urgency_level',
       ], fallback: TodoUrgencyLevel.notUrgentImportant.value),

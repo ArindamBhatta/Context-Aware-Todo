@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:todo/features/add_todo/data/cache/todo_database.dart';
@@ -7,6 +8,8 @@ import 'package:todo/core/services/firestore_service.dart';
 void callbackDispatcher() {
   Workmanager().executeTask((taskName, inputData) async {
     try {
+      // 0. Ensure Flutter bindings are initialized in background isolate
+      WidgetsFlutterBinding.ensureInitialized();
       // 1. Initialize Firebase (since the app might be closed)
       await Firebase.initializeApp();
       // 2. Open the local database
@@ -35,7 +38,8 @@ void callbackDispatcher() {
         }
       }
       return Future.value(true); // Tell OS the task succeeded
-    } catch (error) {
+    } catch (error, stack) {
+      debugPrint("Background sync error: $error\n$stack");
       return Future.value(false); // Tell OS it failed, try again later
     }
   });

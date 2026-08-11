@@ -2,10 +2,11 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class TodoDatabase {
-  TodoDatabase._();
+  TodoDatabase._(); //private constructor
 
-  static final TodoDatabase instance = TodoDatabase._();
-  static Database? _database;
+  static final TodoDatabase instance = TodoDatabase._(); //singleton
+
+  static Database? _database; //caching the db object
 
   Future<Database> get database async {
     if (_database != null) {
@@ -16,8 +17,13 @@ class TodoDatabase {
   }
 
   Future<Database> _initDb() async {
-    final databasesPath = await getDatabasesPath();
-    final path = join(databasesPath, 'todo_cache.db');
+    final databasesPath =
+        await getDatabasesPath(); //data/data/<package_name>/databases
+
+    final path = join(
+      databasesPath,
+      'todo_cache.db',
+    ); //joins paths to form db path
 
     return openDatabase(
       path,

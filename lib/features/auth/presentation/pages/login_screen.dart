@@ -121,8 +121,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: colorScheme.surfaceBright,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -137,49 +139,47 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: 88,
                     height: 88,
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF5E42EB), Color(0xFF7C3AED)],
+                      gradient: LinearGradient(
+                        colors: [colorScheme.primary, colorScheme.secondary],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.circular(28),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(
-                            0xFF5E42EB,
-                          ).withValues(alpha: 0.35),
+                          color: colorScheme.primary.withValues(alpha: 0.35),
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),
                       ],
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.check_circle_outline_rounded,
                       size: 46,
-                      color: Colors.white,
+                      color: colorScheme.onPrimary,
                     ),
                   ),
                   const SizedBox(height: 36),
 
                   // Welcome Heading
-                  const Text(
+                  Text(
                     'Welcome Back',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF0F172A),
+                      color: colorScheme.onSurface,
                       letterSpacing: -0.5,
                     ),
                   ),
                   const SizedBox(height: 10),
 
-                  const Text(
+                  Text(
                     'Sign in to manage your tasks, track daily progress, and stay organized.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
-                      color: Color(0xFF64748B),
+                      color: colorScheme.onSurfaceVariant,
                       height: 1.5,
                     ),
                   ),
@@ -192,43 +192,43 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: OutlinedButton(
                       onPressed: _isLoading ? null : _handleGoogleSignIn,
                       style: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: const Color(0xFF0F172A),
-                        side: const BorderSide(
-                          color: Color(0xFFE2E8F0),
+                        backgroundColor: colorScheme.surface,
+                        foregroundColor: colorScheme.onSurface,
+                        side: BorderSide(
+                          color: colorScheme.outlineVariant,
                           width: 1.5,
                         ),
                         elevation: 2,
-                        shadowColor: Colors.black.withValues(alpha: 0.04),
+                        shadowColor: colorScheme.shadow.withValues(alpha: 0.04),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
                       child:
                           _isLoading
-                              ? const SizedBox(
+                              ? SizedBox(
                                 width: 22,
                                 height: 22,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2.5,
-                                  color: Color(0xFF5E42EB),
+                                  color: colorScheme.primary,
                                 ),
                               )
-                              : const Row(
+                              : Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  FaIcon(
+                                  const FaIcon(
                                     FontAwesomeIcons.google,
                                     size: 20,
                                     color: Color(0xFF4285F4),
                                   ),
-                                  SizedBox(width: 14),
+                                  const SizedBox(width: 14),
                                   Text(
                                     'Continue with Google',
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
-                                      color: Color(0xFF0F172A),
+                                      color: colorScheme.onSurface,
                                       letterSpacing: -0.2,
                                     ),
                                   ),
@@ -245,17 +245,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 50,
                       child: TextButton.icon(
                         onPressed: _isLoading ? null : _verifyBiometric,
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.fingerprint_rounded,
-                          color: Color(0xFF5E42EB),
+                          color: colorScheme.primary,
                           size: 22,
                         ),
-                        label: const Text(
+                        label: Text(
                           'Unlock with Biometrics',
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF5E42EB),
+                            color: colorScheme.primary,
                           ),
                         ),
                       ),
@@ -271,14 +271,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       Icon(
                         Icons.shield_outlined,
                         size: 16,
-                        color: Colors.grey.shade400,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                       const SizedBox(width: 6),
                       Text(
                         'Secured with Google & Device Protection',
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.grey.shade500,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],

@@ -37,19 +37,17 @@ class ScrollableScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.w900,
-                        color:
-                            Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : Colors.black,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Text(
                       subCaption!,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],

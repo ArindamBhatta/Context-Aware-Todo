@@ -15,30 +15,27 @@ class _TasksPageState extends State<TasksPage> {
   DateTime _selectedDate = DateTime.now();
   String _selectedStatusFilter = 'All'; // 'All', 'To do', 'In Progress', 'Done'
 
-  // Primary Theme Colors based on design
-  static const Color primaryPurple = Color(0xFF6C4DFF);
-  static const Color lightBg = Color(0xFFF7F8FA);
-  static const Color chipUnselectedBg = Color(0xFFF0EFFC);
-
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: lightBg,
+      backgroundColor: colorScheme.surfaceBright,
       appBar: AppBar(
-        backgroundColor: lightBg,
+        backgroundColor: colorScheme.surfaceBright,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new,
-            color: Colors.black,
+            color: colorScheme.onSurface,
             size: 20,
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           "Today's Tasks",
           style: TextStyle(
-            color: Colors.black,
+            color: colorScheme.onSurface,
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
@@ -46,7 +43,7 @@ class _TasksPageState extends State<TasksPage> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications_active, color: Colors.black),
+            icon: Icon(Icons.notifications_active, color: colorScheme.onSurface),
             onPressed: () {},
           ),
         ],
@@ -71,8 +68,8 @@ class _TasksPageState extends State<TasksPage> {
               child: BlocBuilder<TodoCubit, TodoState>(
                 builder: (context, state) {
                   if (state is TodoLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(color: primaryPurple),
+                    return Center(
+                      child: CircularProgressIndicator(color: colorScheme.primary),
                     );
                   }
                   if (state is TaskError) {
@@ -91,10 +88,10 @@ class _TasksPageState extends State<TasksPage> {
                             fit: BoxFit.contain,
                           ),
                           const SizedBox(height: 12),
-                          const Text(
+                          Text(
                             'No tasks found',
                             style: TextStyle(
-                              color: Color(0xFF64748B),
+                              color: colorScheme.onSurfaceVariant,
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -120,7 +117,6 @@ class _TasksPageState extends State<TasksPage> {
                         } else if (_selectedStatusFilter == 'Done') {
                           matchesStatus = !task.isPending;
                         }
-                        // Add your custom logic for 'In Progress' if required in your backend
 
                         return isSameDate && matchesStatus;
                       }).toList();
@@ -136,10 +132,10 @@ class _TasksPageState extends State<TasksPage> {
                             fit: BoxFit.contain,
                           ),
                           const SizedBox(height: 12),
-                          const Text(
+                          Text(
                             'No tasks found for this day',
                             style: TextStyle(
-                              color: Color(0xFF64748B),
+                              color: colorScheme.onSurfaceVariant,
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -173,7 +169,7 @@ class _TasksPageState extends State<TasksPage> {
   // --- WIDGET BUILDERS ---
 
   Widget _buildDateStrip() {
-    // Generates dates centered around selected date (e.g., 7-day view window)
+    final colorScheme = Theme.of(context).colorScheme;
     final today = DateTime.now();
     final dates = List.generate(
       7,
@@ -200,12 +196,12 @@ class _TasksPageState extends State<TasksPage> {
               width: 60,
               margin: const EdgeInsets.symmetric(horizontal: 6),
               decoration: BoxDecoration(
-                color: isSelected ? primaryPurple : Colors.white,
+                color: isSelected ? colorScheme.primary : colorScheme.surface,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   if (!isSelected)
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.03),
+                      color: colorScheme.shadow.withValues(alpha: 0.03),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
@@ -218,7 +214,9 @@ class _TasksPageState extends State<TasksPage> {
                     DateFormat('MMM').format(date),
                     style: TextStyle(
                       fontSize: 12,
-                      color: isSelected ? Colors.white70 : Colors.grey,
+                      color: isSelected
+                          ? colorScheme.onPrimary.withValues(alpha: 0.8)
+                          : colorScheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -227,7 +225,9 @@ class _TasksPageState extends State<TasksPage> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: isSelected ? Colors.white : Colors.black87,
+                      color: isSelected
+                          ? colorScheme.onPrimary
+                          : colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -236,7 +236,9 @@ class _TasksPageState extends State<TasksPage> {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: isSelected ? Colors.white : Colors.grey.shade600,
+                      color: isSelected
+                          ? colorScheme.onPrimary
+                          : colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -249,6 +251,7 @@ class _TasksPageState extends State<TasksPage> {
   }
 
   Widget _buildFilterChips() {
+    final colorScheme = Theme.of(context).colorScheme;
     final filters = ['All', 'To do', 'In Progress', 'Done'];
 
     return SingleChildScrollView(
@@ -269,7 +272,9 @@ class _TasksPageState extends State<TasksPage> {
                     child: Text(
                       filter,
                       style: TextStyle(
-                        color: isSelected ? Colors.white : primaryPurple,
+                        color: isSelected
+                            ? colorScheme.onPrimary
+                            : colorScheme.primary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -282,8 +287,9 @@ class _TasksPageState extends State<TasksPage> {
                       });
                     }
                   },
-                  backgroundColor: chipUnselectedBg,
-                  selectedColor: primaryPurple,
+                  backgroundColor:
+                      colorScheme.primaryContainer.withValues(alpha: 0.3),
+                  selectedColor: colorScheme.primary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -297,17 +303,18 @@ class _TasksPageState extends State<TasksPage> {
   }
 
   Widget _buildTaskCard(TodoModel task) {
+    final colorScheme = Theme.of(context).colorScheme;
     final isDone = !task.isPending;
     final statusText = isDone ? 'Done' : 'To-do';
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: colorScheme.shadow.withValues(alpha: 0.03),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -323,9 +330,9 @@ class _TasksPageState extends State<TasksPage> {
                 // Category subtitle
                 Text(
                   task.category,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
-                    color: Colors.grey,
+                    color: colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -337,7 +344,9 @@ class _TasksPageState extends State<TasksPage> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: isDone ? Colors.grey : Colors.black87,
+                    color: isDone
+                        ? colorScheme.onSurfaceVariant
+                        : colorScheme.onSurface,
                     decoration: isDone ? TextDecoration.lineThrough : null,
                   ),
                 ),
@@ -346,17 +355,17 @@ class _TasksPageState extends State<TasksPage> {
                 // Start Time & Status Tag Row
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.access_time_rounded,
                       size: 16,
-                      color: primaryPurple,
+                      color: colorScheme.primary,
                     ),
                     const SizedBox(width: 4),
                     Text(
                       DateFormat('hh:mm a').format(task.startTime),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: primaryPurple,
+                        color: colorScheme.primary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -369,10 +378,9 @@ class _TasksPageState extends State<TasksPage> {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color:
-                            isDone
-                                ? const Color(0xFFE8E5FF)
-                                : const Color(0xFFE0F2FE),
+                        color: isDone
+                            ? colorScheme.primaryContainer.withValues(alpha: 0.4)
+                            : colorScheme.secondaryContainer.withValues(alpha: 0.4),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -380,8 +388,9 @@ class _TasksPageState extends State<TasksPage> {
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
-                          color:
-                              isDone ? primaryPurple : const Color(0xFF0284C7),
+                          color: isDone
+                              ? colorScheme.primary
+                              : colorScheme.secondary,
                         ),
                       ),
                     ),
@@ -396,13 +405,13 @@ class _TasksPageState extends State<TasksPage> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: const Color(0xFFFFEBF0), // Soft background container
+              color: colorScheme.primaryContainer.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.shopping_bag_outlined,
               size: 20,
-              color: Colors.pinkAccent,
+              color: colorScheme.primary,
             ),
           ),
         ],

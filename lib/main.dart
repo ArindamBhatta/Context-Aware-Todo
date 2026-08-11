@@ -28,13 +28,13 @@ void main() async {
   );
 
   Workmanager().registerPeriodicTask(
-    "1", // A unique ID for this task
+    "firebaseBackgroundSyncTask", // A unique ID for this task
     "nightlyFirebaseSync", // The name of the task
-    frequency: const Duration(hours: 24), // How often it runs
+    frequency: const Duration(hours: 24), // Run once every 24 hours
+    existingWorkPolicy: ExistingPeriodicWorkPolicy.replace,
     constraints: Constraints(
       networkType: NetworkType.connected, // Only run if internet is available
-      requiresCharging:
-          true, // Only run if phone is plugged in (optional, but good for night syncs)
+      requiresCharging: false, // Run even if not plugged into charger
     ),
   );
   runApp(const TodoApp());
@@ -132,6 +132,7 @@ class _AppViewState extends State<AppView> {
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: state.themeMode,
+          debugShowCheckedModeBanner: false,
           routerConfig: _router,
         );
       },
