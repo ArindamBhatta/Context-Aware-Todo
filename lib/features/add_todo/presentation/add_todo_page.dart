@@ -363,6 +363,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
       category: taskGroup,
       urgencyLevel: urgencyLevel.value,
       isPending: true,
+      taskType: selectedTabIndex == 0 ? 'quick' : 'project',
     );
 
     context.read<TodoCubit>().addTask(task);

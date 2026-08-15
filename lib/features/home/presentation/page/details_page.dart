@@ -15,10 +15,10 @@ class DetailsPage extends StatelessWidget {
         task.startTime.month == task.endTime.month &&
         task.startTime.day == task.endTime.day;
 
-    if (isSameDay) {
-      return QuickWorkDetailsPage(task: task);
-    } else {
+    if (task.taskType == 'project' || (!isSameDay && task.taskType != 'quick')) {
       return ProjectWorkDetailsPage(task: task);
+    } else {
+      return QuickWorkDetailsPage(task: task);
     }
   }
 }

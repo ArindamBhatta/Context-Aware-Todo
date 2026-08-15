@@ -68,6 +68,7 @@ class TodoModel {
   final DateTime endTime;
   final String urgencyLevel;
   final bool isPending;
+  final String taskType; // 'quick' or 'project'
 
   TodoModel({
     String? id,
@@ -78,6 +79,7 @@ class TodoModel {
     required this.endTime,
     required this.urgencyLevel,
     required this.isPending,
+    this.taskType = 'quick',
   }) : id = id ?? uuid.v4();
 
   TodoModel copyWith({
@@ -89,6 +91,7 @@ class TodoModel {
     DateTime? endTime,
     String? urgencyLevel,
     bool? isPending,
+    String? taskType,
   }) {
     return TodoModel(
       id: id ?? this.id,
@@ -99,6 +102,7 @@ class TodoModel {
       endTime: endTime ?? this.endTime,
       urgencyLevel: urgencyLevel ?? this.urgencyLevel,
       isPending: isPending ?? this.isPending,
+      taskType: taskType ?? this.taskType,
     );
   }
 
@@ -112,6 +116,7 @@ class TodoModel {
       'end_time': endTime.toIso8601String(),
       'urgency_level': urgencyLevel,
       'is_pending': isPending ? 1 : 0,
+      'task_type': taskType,
       'is_synced': 0, //! To be Synced
     };
   }
@@ -205,6 +210,7 @@ class TodoModel {
         'urgency_level',
       ], fallback: TodoUrgencyLevel.notUrgentImportant.value),
       isPending: _readBool(json, ['is_pending'], fallback: true),
+      taskType: _readString(json, ['task_type'], fallback: 'quick'),
     );
   }
 }
