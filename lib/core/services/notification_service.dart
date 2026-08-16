@@ -3,6 +3,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 // Used for time zone operations
 import 'package:timezone/timezone.dart' as tz;
+import 'package:todo/features/add_todo/data/model/todo.dart';
 
 class NotificationService {
   // Private constructor to prevent direct instantiation
@@ -156,4 +157,35 @@ class NotificationService {
   Future<void> cancelAllNotifications() async {
     await _notificationsPlugin.cancelAll();
   }
+
+  /// Schedules a 50% lapsed local notification for Quick Work tasks
+  Future<void> scheduleQuickWork50PercentNotification(TodoModel task) async {
+    if (task.taskType != 'quick' || !task.isPending) return;
+
+    final int totalSeconds = task.endTime.difference(task.startTime).inSeconds;
+    if (totalSeconds <= 0) return;
+
+    final int midpointSeconds = (totalSeconds / 2).round();
+    final DateTime midpointTime = task.startTime.add(Duration(seconds: midpointSeconds));
+    final DateTime now = DateTime.now();
+
+    final Duration remainingToMidpoint = midpointTime.difference(now);
+    final int notificationId = task.id.hashCode.abs();
+
+    if (remainingToMidpoint > Duration.zero) {
+      await scheduleNotification(
+        id: notificationId,
+        title: '⏳ Quick Work 50% Time Lapsed!',
+        body: 'Your 50% time for "${task.name}" is lapsed. You have 50% time in your hand.',
+        duration: remainingToMidpoint,
+      );
+    }
+  }
+
+  /// Cancels scheduled 50% lapsed notification for a specific task
+  Future<void> cancelQuickWorkNotification(String taskId) async {
+    final int notificationId = taskId.hashCode.abs();
+    await cancelNotification(notificationId);
+  }
 }
+

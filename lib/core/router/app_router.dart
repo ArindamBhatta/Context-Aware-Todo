@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:todo/features/Profile/profile.dart';
+import 'package:todo/features/Profile/profile_page.dart';
 import 'package:todo/features/add_todo/presentation/add_todo_page.dart';
 import 'package:todo/features/auth/presentation/pages/login_screen.dart';
 import 'package:todo/features/home/presentation/page/home_navigation_page.dart';

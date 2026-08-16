@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo/core/router/app_router.dart';
-import 'package:todo/features/Profile/profile.dart';
+import 'package:todo/features/Profile/profile_page.dart';
 import 'package:todo/features/home/presentation/page/home_screen.dart';
 import 'package:todo/features/pomodoro/pomodoro.dart';
 import 'package:todo/features/tasks/tasks_page.dart';
