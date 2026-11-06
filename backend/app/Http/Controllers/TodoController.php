@@ -7,25 +7,12 @@ namespace App\Http\Controllers;
 use App\Models\Todo;
 use Illuminate\Http\Request;
 
-// A CONTROLLER receives the HTTP request, does the work, and returns a response.
-// This one has the 5 standard CRUD methods:
-//
-//   Method   URL               Controller method   What it does
-//   GET      /api/todos        index()             list all todos     (Read)
-//   POST     /api/todos        store()             create a todo      (Create)
-//   GET      /api/todos/{id}   show()              get one todo       (Read)
-//   PUT      /api/todos/{id}   update()            change a todo      (Update)
-//   DELETE   /api/todos/{id}   destroy()           delete a todo      (Delete)
-//
-// These URLs are connected to the methods in routes/api.php.
+
 class TodoController extends Controller
 {
     // READ ALL: GET /api/todos
     public function index()
     {
-        // latest() sorts by created_at, newest first. get() runs the query.
-        // Returning a model or collection from a controller makes Laravel
-        // convert it to JSON automatically.
         return Todo::latest()->get();
     }
 
@@ -33,10 +20,6 @@ class TodoController extends Controller
     // Laravel puts the incoming request (headers, body, ...) into $request.
     public function store(Request $request)
     {
-        // Step 1: VALIDATE the input.
-        // If validation fails, Laravel STOPS here and sends a
-        // 422 response with the error messages. Your code below never runs.
-        // If it passes, $validated holds ONLY the fields listed here.
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'], // must be sent, max 255 characters
             'description' => ['nullable', 'string'],        // optional

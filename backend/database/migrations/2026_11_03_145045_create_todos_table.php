@@ -1,6 +1,6 @@
 <?php
 
-// ! 1: Defines the todos table
+// ! 1: Defines the Migration table
 
 // A MIGRATION describes the structure of a database table, written in PHP.
 // Run `php artisan migrate` to create the table.
@@ -16,17 +16,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('todos', function (Blueprint $table) {
-            // Auto-incrementing primary key column called "id" (1, 2, 3, ...).
-            $table->id();
+            $table->uuid('id')->primary();
 
-            // VARCHAR(255) column for the todo's title. It is required (NOT NULL).
-            $table->string('title');
+            $table->string('name');
 
-            // TEXT column for a longer description. nullable() makes it optional.
             $table->text('description')->nullable();
 
-            // TRUE/FALSE column. New todos start as "not completed".
-            $table->boolean('is_completed')->default(false);
+            $table->string('category');
+
+            $table->boolean('is_pending')->default(true);
+
+            $table->string(('task_type'));
+
+            $table->string(('urgency_level'));
 
             // Adds two columns, "created_at" and "updated_at".
             // Laravel fills them in automatically on create and update.
