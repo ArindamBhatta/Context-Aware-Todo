@@ -14,19 +14,19 @@ After performing a complete structural audit of the Flutter Todo application cod
 
 > ### 🚨 Critical App Flow Gaps Identified
 >
-> 1. **[Authentication & Multi-Tenant Task Scoping Deficit]**: **Tasks and SQLite/Firestore entities are currently saved globally without binding to an authenticated User UUID or Email. When multiple users sign up or switch accounts in the app, user A can view, edit, or overwrite user B's tasks because the Firestore `/tasks` collection and local SQLite `tasks` table lack a mandatory `user_id` column/field.**
+> 1. **[Authentication & Multi-Tenant Task Scoping Deficit]**: **Tasks and SQLite/Laravel entities are currently saved globally without binding to an authenticated User UUID or Email. When multiple users sign up or switch accounts in the app, user A can view, edit, or overwrite user B's tasks because the Laravel `/tasks` collection and local SQLite `tasks` table lack a mandatory `user_id` column/field.**
 >
-> 2. **[User Profile Sync & Storage Gap]**: **Google Sign-In authentication succeeds via `GoogleAuthService`, but user metadata (Name, Email, Profile Picture URL, UUID, Last Login, Home/Office Coordinates) is never saved or updated in Cloud Firestore under a `/users/{userId}` document schema. The app lacks user persistence in the cloud database.**
+> 2. **[User Profile Sync & Storage Gap]**: **Sign-in succeeds via `AuthRepository`, but user metadata (Name, Email, Profile Picture URL, UUID, Last Login, Home/Office Coordinates) is never saved or updated in Laravel API under a `/users/{userId}` document schema. The app lacks user persistence in the cloud database.**
 >
 > 3. **[Profile Page Placeholder Deficit]**: **The Profile Page (`lib/features/Profile/profile.dart`) is currently a blank placeholder (`Center(child: Text('Profile Page'))`) lacking user identity details, completed task statistics, and the GitHub-style 365-day Activity Contribution Heatmap for Quick and Project Work.**
 >
 > 4. **[Quick Work 50% Lapsed Local Notification Scheduling Gap]**: **The `NotificationService` currently supports instant alerts and Pomodoro timers, but lacks scheduled background triggers for Quick Work tasks when 50% of the allocated time window elapses ("Your 50% time is lapsed. You have 50% time in your hand.") when the app is in the background or terminated.**
 >
-> 5. **[Project Work Daily Progress Memory Volatility Gap]**: **In `ProjectWorkDetailsPage`, daily progress entries (`_progressLogs`) are stored exclusively in in-memory state (`List<Map<String, String>>`). When the user leaves the details page or restarts the app, all logged daily updates are lost permanently because SQLite has no `project_progress` table and Firestore has no `progress_logs` subcollection.**
+> 5. **[Project Work Daily Progress Memory Volatility Gap]**: **In `ProjectWorkDetailsPage`, daily progress entries (`_progressLogs`) are stored exclusively in in-memory state (`List<Map<String, String>>`). When the user leaves the details page or restarts the app, all logged daily updates are lost permanently because SQLite has no `project_progress` table and Laravel has no `progress_logs` subcollection.**
 >
 > 6. **[Project Work UI/UX & Daily Progress Update Flow Deficit]**: **The current daily progress UI relies on a raw popup dialog without date locking, streak counters, percentage progress sliders, or milestone path nodes. Users cannot edit prior logs, visualize progress curves, or track daily check-in habits.**
 >
-> 7. **[Intrusive Location Prompt UI & Missing Cloud Storage Gap]**: **The app proactively prompts for location permissions using raw, blocking system `AlertDialog` dialogs sequentially on the Home Screen upon launch, leading to a jarring user experience. Additionally, latitude and longitude coordinates are saved only in local SQLite (`locations` table) and never synced to Cloud Firestore.**
+> 7. **[Intrusive Location Prompt UI & Missing Cloud Storage Gap]**: **The app proactively prompts for location permissions using raw, blocking system `AlertDialog` dialogs sequentially on the Home Screen upon launch, leading to a jarring user experience. Additionally, latitude and longitude coordinates are saved only in local SQLite (`locations` table) and never synced to Laravel API.**
 
 ---
 
@@ -107,9 +107,9 @@ When creating or editing a task with `task_type == 'quick'`:
 
 ### Task 2: Project Work Daily Progress Persistence & UI/UX Redesign
 
-#### A. Data Persistence Architecture (SQLite + Cloud Firestore Sync)
+#### A. Data Persistence Architecture (SQLite + Laravel API Sync)
 
-To fix the memory volatility bug where `_progressLogs` are lost on widget dispose, we introduce local SQLite caching with background Firestore sync.
+To fix the memory volatility bug where `_progressLogs` are lost on widget dispose, we introduce local SQLite caching with background Laravel sync.
 
 ##### 1. Local SQLite Schema Migration (New Table `project_progress`)
 ```sql
@@ -128,7 +128,7 @@ CREATE TABLE project_progress (
 );
 ```
 
-##### 2. Cloud Firestore Subcollection Schema
+##### 2. Laravel API Subcollection Schema
 * **Document Path**: `/tasks/{taskId}/progress_logs/{logId}`
 ```json
 {
@@ -163,18 +163,18 @@ Replace basic static lists with an animated **Daily Progress Timeline**:
 
 ---
 
-### Task 3: Cloud Firestore DB Design for Multi-User Support
+### Task 3: Laravel DB Design for Multi-User Support
 
 #### A. Multi-Tenant Data Isolation Strategy
-To support multiple users without data leakage, every record written to Firestore and SQLite MUST include the authenticated user's `user_id` (Firebase Auth `uid`) and `user_email`.
+To support multiple users without data leakage, every record written to the Laravel database and SQLite MUST include the authenticated user's `user_id` and `user_email`.
 
-#### B. Cloud Firestore Schema Structure
+#### B. Laravel Schema Structure
 
-##### Collection: `/tasks`
-* **Document ID**: `taskId` (UUID v4)
+##### Table: `todos`
+* **Primary key**: `id` (UUID)
 * **Fields**:
   * `id`: `string`
-  * `user_id`: `string` (Firebase Auth UID — Mandatory Index)
+  * `user_id`: `string` (owner id — mandatory index)
   * `user_email`: `string`
   * `name`: `string`
   * `description`: `string`
@@ -187,30 +187,8 @@ To support multiple users without data leakage, every record written to Firestor
   * `created_at`: `timestamp`
   * `updated_at`: `timestamp`
 
-#### C. Cloud Firestore Security Rules Blueprint
-```javascript
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    
-    // User profile access control
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-    
-    // Multi-tenant task access control
-    match /tasks/{taskId} {
-      allow read, update, delete: if request.auth != null && resource.data.user_id == request.auth.uid;
-      allow create: if request.auth != null && request.resource.data.user_id == request.auth.uid;
-      
-      // Progress logs subcollection access control
-      match /progress_logs/{logId} {
-        allow read, write: if request.auth != null && request.auth.uid == request.resource.data.user_id;
-      }
-    }
-  }
-}
-```
+#### C. Access Control
+Authorize every request in Laravel (policies / `user_id` scoping) so a user can only read and write their own todos.
 
 #### D. Local SQLite Schema Version 2 Upgrade
 Modify `TodoDatabase` `_initDb()` to migration version 2:
@@ -221,15 +199,15 @@ ALTER TABLE tasks ADD COLUMN user_email TEXT DEFAULT '';
 
 ---
 
-### Task 4: User Information Storage in Cloud Firestore
+### Task 4: User Information Storage in Laravel
 
 #### A. Document Schema Structure
-Upon user login (Google Sign-In, Email/Password, or Session Restore), the app writes/updates user information in Cloud Firestore.
+Upon user login (Local sign-in, Email/Password, or Session Restore), the app writes/updates user information through the Laravel API.
 
-* **Document Path**: `/users/{userId}`
+* **Table**: `users` (one row per user)
 ```json
 {
-  "uuid": "firebase_auth_uid_123456",
+  "uuid": "user_uuid_123456",
   "name": "Arindam Bhatta",
   "email": "arindam@example.com",
   "profile_picture": "https://lh3.googleusercontent.com/a/ACg8oc...",
@@ -254,14 +232,14 @@ Upon user login (Google Sign-In, Email/Password, or Session Restore), the app wr
 ```
 
 #### B. Auth Integration Lifecycle Sync
-Update `AuthCubit` and `FirestoreService`:
-1. When `signInWithGoogle()` succeeds, fetch Firebase `User`.
+Update `AuthCubit` and `ApiService`:
+1. When `signIn()` succeeds, fetch the signed-in user from the Laravel API.
 2. Construct `UserModel` with `uuid`, `displayName`, `email`, `photoUrl`.
-3. Call `FirestoreService.instance.saveUserProfile(userModel)`.
+3. Call `ApiService.instance.saveUserProfile(userModel)`.
 
 ---
 
-### Task 7: Location Tracker UI/UX Redesign & Firestore Sync
+### Task 7: Location Tracker UI/UX Redesign & API Sync
 
 #### A. UI/UX Prompt Elevation (Bottom Sheet Modal)
 
@@ -292,11 +270,11 @@ Replace native alert dialogs with a modern, glassmorphic **Location Setup Bottom
 +-------------------------------------------------------------+
 ```
 
-#### B. Firestore Location Persistence Workflow
+#### B. Laravel Location Persistence Workflow
 When the user sets Home or Office location:
 1. Save locally in SQLite `locations` table.
-2. Push coordinates to Firestore document `/users/{userId}` under `home_location` or `office_location`.
-3. Update `current_location` map field in Firestore whenever position updates.
+2. Push coordinates to Laravel document `/users/{userId}` under `home_location` or `office_location`.
+3. Update `current_location` map field in Laravel whenever position updates.
 
 ---
 
@@ -304,12 +282,12 @@ When the user sets Home or Office location:
 
 | Database | Entity / Table | Key Fields | Purpose | Sync Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **SQLite** | `tasks` | `id`, `user_id`, `name`, `category`, `urgency_level`, `task_type`, `is_pending`, `start_time`, `end_time`, `is_synced` | Local task caching & offline-first capability | Syncs to Firestore `/tasks/{id}` |
+| **SQLite** | `tasks` | `id`, `user_id`, `name`, `category`, `urgency_level`, `task_type`, `is_pending`, `start_time`, `end_time`, `is_synced` | Local task caching & offline-first capability | Syncs to Laravel `/tasks/{id}` |
 | **SQLite** | `project_progress` | `id`, `task_id`, `user_id`, `day_number`, `topic`, `notes`, `percentage_completed`, `log_date`, `is_synced` | Persistent daily updates for project work | Syncs to `/tasks/{id}/progress_logs/{logId}` |
 | **SQLite** | `locations` | `category` (Home/Office), `latitude`, `longitude` | Fast offline geofencing matching | Syncs to `/users/{id}` |
-| **Firestore** | `/users/{userId}` | `uuid`, `name`, `email`, `profile_picture`, `home_location`, `office_location`, `current_location` | Global user identity & location storage | Primary Source of User Profile |
-| **Firestore** | `/tasks/{taskId}` | `id`, `user_id`, `user_email`, `name`, `description`, `category`, `urgency_level`, `task_type`, `is_pending` | Cloud storage for multi-device sync | Primary Task Store |
-| **Firestore** | `/tasks/{id}/progress_logs` | `id`, `task_id`, `user_id`, `day_number`, `topic`, `notes`, `percentage_completed`, `log_date` | Subcollection for daily project progress | Primary Project Log Store |
+| **Laravel** | `/users/{userId}` | `uuid`, `name`, `email`, `profile_picture`, `home_location`, `office_location`, `current_location` | Global user identity & location storage | Primary Source of User Profile |
+| **Laravel** | `/tasks/{taskId}` | `id`, `user_id`, `user_email`, `name`, `description`, `category`, `urgency_level`, `task_type`, `is_pending` | Cloud storage for multi-device sync | Primary Task Store |
+| **Laravel** | `/tasks/{id}/progress_logs` | `id`, `task_id`, `user_id`, `day_number`, `topic`, `notes`, `percentage_completed`, `log_date` | Subcollection for daily project progress | Primary Project Log Store |
 
 ---
 
@@ -321,12 +299,12 @@ gantt
     dateFormat  YYYY-MM-DD
     section Phase 1: Auth & Data Isolation
     Update User Model & Multi-Tenant SQLite :a1, 2026-08-16, 2d
-    Firestore Rules & Multi-User Queries    :a2, after a1, 2d
+    Laravel Rules & Multi-User Queries    :a2, after a1, 2d
     section Phase 2: User Profile & Location
-    Firestore User Profile Sync             :b1, 2026-08-20, 2d
+    Laravel User Profile Sync             :b1, 2026-08-20, 2d
     Redesign Location Prompt UI & Sync      :b2, after b1, 2d
     section Phase 3: Project Progress
-    SQLite & Firestore Progress Persistence :c1, 2026-08-24, 3d
+    SQLite & Laravel Progress Persistence :c1, 2026-08-24, 3d
     Redesign Project Details & Timeline UI  :c2, after c1, 3d
     section Phase 4: Heatmap & Notifications
     Quick Work 50% Lapsed Notification      :d1, 2026-08-30, 2d
@@ -336,17 +314,17 @@ gantt
 ### Phase 1: Authentication & Multi-Tenant Data Isolation
 - Add `uid` and `email` to `UserModel`.
 - Upgrade SQLite schema (`tasks` table version 2) with `user_id` and `user_email`.
-- Update `FirestoreService` to query `/tasks` filtered by `where('user_id', isEqualTo: currentUserId)`.
-- Deploy Cloud Firestore Security Rules.
+- Update `ApiService` to query `/tasks` filtered by `where('user_id', isEqualTo: currentUserId)`.
+- Deploy Laravel API Security Rules.
 
 ### Phase 2: User Profile Sync & Location UX Redesign
-- Implement `FirestoreService.upsertUserProfile()` to write user metadata on auth events.
+- Implement `ApiService.upsertUserProfile()` to write user metadata on auth events.
 - Create `LocationSetupBottomSheet` widget replacing raw `AlertDialog` popups.
-- Save location coordinates to Firestore `/users/{userId}`.
+- Save location coordinates to Laravel `/users/{userId}`.
 
 ### Phase 3: Project Work Daily Progress Persistence & Timeline UX
 - Create SQLite `project_progress` table and DAO methods.
-- Build Firestore subcollection sync for `/tasks/{taskId}/progress_logs`.
+- Build Laravel subcollection sync for `/tasks/{taskId}/progress_logs`.
 - Redesign `ProjectWorkDetailsPage` with daily milestone path nodes, percentage sliders, and streak counters.
 
 ### Phase 4: Quick Work Notifications & GitHub Activity Grid

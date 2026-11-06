@@ -1,8 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:workmanager/workmanager.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:todo/features/add_todo/data/cache/todo_database.dart';
-import 'package:todo/core/services/firestore_service.dart';
+import 'package:todo/core/services/api_service.dart';
 
 @pragma('vm:entry-point') // Mandatory for WorkManager!
 void callbackDispatcher() {
@@ -10,11 +9,9 @@ void callbackDispatcher() {
     try {
       // 0. Ensure Flutter bindings are initialized in background isolate
       WidgetsFlutterBinding.ensureInitialized();
-      // 1. Initialize Firebase (since the app might be closed)
-      await Firebase.initializeApp();
-      // 2. Open the local database
+      // 1. Open the local database
       final db = await TodoDatabase.instance.database;
-      // 3. Fetch all tasks where is_synced == 0
+      // 2. Fetch all tasks where is_synced == 0
       final List<Map<String, dynamic>> unsyncedTasks = await db.query(
         'tasks',
         where: 'is_synced = ?',
@@ -22,11 +19,11 @@ void callbackDispatcher() {
       );
 
       if (unsyncedTasks.isNotEmpty) {
-        // 4. Loop through and push to Cloud Firestore
+        // 3. Loop through and push to the Laravel API
         for (var task in unsyncedTasks) {
-          final success = await FirestoreService.instance.pushTask(task);
+          final success = await ApiService.instance.pushTask(task);
 
-          // 5. Mark as synced in local DB once successful
+          // 4. Mark as synced in local DB once successful
           if (success) {
             await db.update(
               'tasks',

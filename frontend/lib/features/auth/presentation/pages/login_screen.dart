@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo/core/router/app_router.dart';
 import 'package:todo/features/auth/presentation/logic/auth_cubit.dart';
@@ -51,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<void> _handleGoogleSignIn() async {
+  Future<void> _handleSignIn() async {
     if (_isLoading) return;
 
     setState(() {
@@ -60,10 +59,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final AuthCubit authManager = context.read<AuthCubit>();
-      final bool success = await authManager.signInWithGoogle();
+      final bool success = await authManager.signIn();
 
       if (!success) {
-        _showMessage('Google sign-in was cancelled.');
+        _showMessage('Sign-in failed. Please try again.');
         return;
       }
 
@@ -73,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoggedIn = true;
       });
 
-      // Verify device security after Google sign-in
+      // Verify device security after sign-in
       if (_canUseDeviceAuth) {
         await _verifyBiometric();
       } else {
@@ -185,12 +184,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 44),
 
-                  // Google Sign-In Button (Production Standard)
+                  // Sign-in button
                   SizedBox(
                     width: double.infinity,
                     height: 54,
                     child: OutlinedButton(
-                      onPressed: _isLoading ? null : _handleGoogleSignIn,
+                      onPressed: _isLoading ? null : _handleSignIn,
                       style: OutlinedButton.styleFrom(
                         backgroundColor: colorScheme.surface,
                         foregroundColor: colorScheme.onSurface,
@@ -217,14 +216,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               : Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const FaIcon(
-                                    FontAwesomeIcons.google,
+                                  Icon(
+                                    Icons.login_rounded,
                                     size: 20,
-                                    color: Color(0xFF4285F4),
+                                    color: colorScheme.primary,
                                   ),
                                   const SizedBox(width: 14),
                                   Text(
-                                    'Continue with Google',
+                                    'Continue',
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -275,7 +274,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        'Secured with Google & Device Protection',
+                        'Secured with Device Protection',
                         style: TextStyle(
                           fontSize: 12,
                           color: colorScheme.onSurfaceVariant,

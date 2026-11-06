@@ -1,22 +1,27 @@
 import '../service/local_auth_service.dart';
-import '../service/google_auth_service.dart';
 import '../model/user_model.dart';
 
 class AuthRepository {
   final LocalAuthService _localAuthService;
-  final GoogleAuthService _googleAuthService;
 
-  AuthRepository(
-    LocalAuthService localAuthService, {
-    GoogleAuthService? googleAuthService,
-  }) : _localAuthService = localAuthService,
-       _googleAuthService = googleAuthService ?? GoogleAuthService();
+  AuthRepository(LocalAuthService localAuthService)
+    : _localAuthService = localAuthService;
 
-  Future<bool> isLoggedIn() async => _googleAuthService.isLoggedIn();
+  Future<bool> isLoggedIn() => _localAuthService.isSignedIn();
 
-  UserModel? getCurrentUser() => _googleAuthService.getCurrentUser();
+  Future<UserModel?> getCurrentUser() async {
+    if (!await _localAuthService.isSignedIn()) {
+      return null;
+    }
+    return const UserModel(displayName: 'User');
+  }
 
-  Future<bool> signInWithGoogle() => _googleAuthService.signInWithGoogle();
+  /// Local sign-in. The Laravel backend has no authentication yet, so this
+  /// only marks the device as signed in (the app lock still protects access).
+  Future<bool> signIn() async {
+    await _localAuthService.setSignedIn(true);
+    return true;
+  }
 
   Future<bool> isBiometricEnabled() => _localAuthService.isBiometricEnabled();
 
@@ -33,7 +38,7 @@ class AuthRepository {
       _localAuthService.verifyAppLockCredential(secret);
 
   Future<void> signOut() async {
-    await _googleAuthService.signOut();
+    await _localAuthService.setSignedIn(false);
     await _localAuthService.clearAppLockCredential();
     await _localAuthService.setBiometricEnabled(false);
   }

@@ -9,6 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LocalAuthService {
   static const String _biometricEnabledKey = 'auth_biometric_enabled';
 
+  static const String _signedInKey = 'auth_signed_in';
+
   static const String _appLockSecretHashKey = 'auth_app_lock_secret_hash';
 
   final FlutterSecureStorage _secureStorage;
@@ -29,6 +31,18 @@ class LocalAuthService {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     await sharedPreferences.setBool(_biometricEnabledKey, enabled);
+  }
+
+  Future<bool> isSignedIn() async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    return sharedPreferences.getBool(_signedInKey) ?? false;
+  }
+
+  Future<void> setSignedIn(bool signedIn) async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    await sharedPreferences.setBool(_signedInKey, signedIn);
   }
 
   Future<bool> hasAppLockCredential() async {

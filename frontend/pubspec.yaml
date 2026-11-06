@@ -34,9 +34,7 @@ dependencies:
 
   local_auth: ^3.0.2 # for biometric authentication
 
-  firebase_core: ^4.12.1
-  firebase_auth: ^6.1.0
-  google_sign_in: ^6.3.0
+  http: ^1.2.2 # for the Laravel API
 
   # connectivity_plus: ^7.3.0 # for checking internet connectivity
 
@@ -44,7 +42,6 @@ dependencies:
 
   flutter_local_notifications: ^20.1.0
   crypto: ^3.0.7 # for hashing
-  cloud_firestore: ^6.8.0
   geolocator: ^14.0.3
   # file_picker: ^8.1.7
   # image_picker: ^1.2.3

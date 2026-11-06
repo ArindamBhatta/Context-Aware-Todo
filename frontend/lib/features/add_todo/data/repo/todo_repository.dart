@@ -1,5 +1,5 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:todo/core/services/firestore_service.dart';
+import 'package:todo/core/services/api_service.dart';
 import 'package:todo/features/add_todo/data/model/todo.dart';
 import 'package:todo/features/add_todo/data/cache/todo_database.dart';
 
@@ -23,7 +23,7 @@ class TodoRepository {
       //if task already exists, replace it
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-    _tryPushToFirestore(task.toJson());
+    _tryPushToApi(task.toJson());
   }
 
   Future<void> updateTask(TodoModel task) async {
@@ -34,11 +34,11 @@ class TodoRepository {
       where: 'id = ?',
       whereArgs: [task.id],
     );
-    _tryPushToFirestore(task.toJson());
+    _tryPushToApi(task.toJson());
   }
 
-  Future<void> _tryPushToFirestore(Map<String, dynamic> taskMap) async {
-    final success = await FirestoreService.instance.pushTask(taskMap);
+  Future<void> _tryPushToApi(Map<String, dynamic> taskMap) async {
+    final success = await ApiService.instance.pushTask(taskMap);
     if (success) {
       final db = await TodoDatabase.instance.database;
       await db.update(

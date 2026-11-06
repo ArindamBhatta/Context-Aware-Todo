@@ -9,7 +9,7 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit(this._repository) : super(const AuthUnauthenticated());
 
   Future<void> syncAuthState() async {
-    final UserModel? user = _repository.getCurrentUser();
+    final UserModel? user = await _repository.getCurrentUser();
     if (user != null) {
       emit(AuthAuthenticated(user));
     } else {
@@ -17,10 +17,10 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<bool> signInWithGoogle() async {
-    final bool isLoggedIn = await _repository.signInWithGoogle();
+  Future<bool> signIn() async {
+    final bool isLoggedIn = await _repository.signIn();
     if (isLoggedIn) {
-      final UserModel? user = _repository.getCurrentUser();
+      final UserModel? user = await _repository.getCurrentUser();
       if (user != null) {
         emit(AuthAuthenticated(user));
       }

@@ -2,7 +2,7 @@
 
 [![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)](https://flutter.dev/)
 [![SQLite](https://img.shields.io/badge/SQLite-%2307405E.svg?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
-[![Firebase](https://img.shields.io/badge/Firebase-%23039BE5.svg?style=for-the-badge&logo=Firebase&logoColor=white)](https://firebase.google.com/)
+[![Laravel](https://img.shields.io/badge/Laravel-%23FF2D20.svg?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com/)
 
 
 
@@ -63,7 +63,7 @@ By integrating **location geofencing**, **biometric security**, **focus timers**
 * **Seamless Connectivity Monitoring**: Integrates `connectivity_plus` to listen for network state changes and notify users of offline operation.
 
 ### 🔔 6. Smart Notifications & Background Tasks
-* **Local & Cloud Notifications**: Integrated background alerts powered by `awesome_notifications` / `flutter_local_notifications` and `firebase_messaging`.
+* **Local Notifications**: Background alerts powered by `flutter_local_notifications`.
 * **Background Execution**: Background worker integration via `workmanager` for scheduled task checks and weather/location updates.
 
 ---
@@ -81,7 +81,7 @@ By integrating **location geofencing**, **biometric security**, **focus timers**
 | **Notifications** | `flutter_local_notifications` | Scheduled local & background notifications |
 | **Background Tasks**| `workmanager` | Periodic background execution on Android |
 | **Network Monitor** | `connectivity_plus` | Real-time network connectivity listening |
-| **Cloud Service** | `firebase_core`, `firebase_auth` | Authentication & backend services |
+| **Backend API** | Laravel REST API (`http`) | Remote task sync (see `../backend`) |
 | **Styling & Icons** | `google_fonts`, `font_awesome_flutter` | Modern typography & iconography |
 
 ---
@@ -127,12 +127,15 @@ CREATE TABLE tasks (
    flutter pub get
    ```
 
-3. **Set up Firebase configuration:**
-   * Place your `google-services.json` file inside `android/app/`.
+3. **Start the Laravel backend** (see the root `README.md`).
 
 4. **Run the application:**
    ```bash
    flutter run
+   ```
+   The API base URL defaults to `http://10.0.2.2:8000/api` (Android emulator). For a real device, pass your machine's IP:
+   ```bash
+   flutter run --dart-define=API_BASE_URL=http://192.168.1.10:8000/api
    ```
 
 ---

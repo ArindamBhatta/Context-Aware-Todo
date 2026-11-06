@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo/core/cubit/theme_bloc.dart';
@@ -21,15 +20,14 @@ import 'package:workmanager/workmanager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   await NotificationService().init();
   Workmanager().initialize(
     callbackDispatcher, // The top level function
   );
 
   Workmanager().registerPeriodicTask(
-    "firebaseBackgroundSyncTask", // A unique ID for this task
-    "nightlyFirebaseSync", // The name of the task
+    "backgroundSyncTask", // A unique ID for this task
+    "nightlySync", // The name of the task
     frequency: const Duration(hours: 24), // Run once every 24 hours
     existingWorkPolicy: ExistingPeriodicWorkPolicy.replace,
     constraints: Constraints(
